@@ -17,6 +17,6 @@ namespace Panaderia.Domain.Entidades
         public int StockActual { get; set; } // Actúa como caché rápido de lectura
 
         // Propiedades de navegación
-        public Categoria? Categoria { get; set; }
+        //public Categoria? Categoria { get; set; }
     }
 }

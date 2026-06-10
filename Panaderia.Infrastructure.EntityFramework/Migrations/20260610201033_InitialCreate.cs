@@ -12,19 +12,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categorias",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categorias", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Productos",
                 columns: table => new
                 {
@@ -40,12 +27,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Productos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Productos_Categorias_CategoriaId",
-                        column: x => x.CategoriaId,
-                        principalTable: "Categorias",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,7 +35,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ProductoId = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<int>(type: "int", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
@@ -76,11 +57,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                 name: "IX_MovimientosStock_ProductoId",
                 table: "MovimientosStock",
                 column: "ProductoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Productos_CategoriaId",
-                table: "Productos",
-                column: "CategoriaId");
         }
 
         /// <inheritdoc />
@@ -91,9 +67,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
 
             migrationBuilder.DropTable(
                 name: "Productos");
-
-            migrationBuilder.DropTable(
-                name: "Categorias");
         }
     }
 }

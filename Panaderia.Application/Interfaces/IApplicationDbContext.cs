@@ -11,7 +11,7 @@ namespace Panaderia.Application.Interfaces
     public interface IApplicationDbContext
     {
         DbSet<Producto> Productos { get; set; }
-        DbSet<Categoria> Categorias { get; set; }
+        //DbSet<Categoria> Categorias { get; set; }
         DbSet<MovimientoStock> MovimientosStock { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

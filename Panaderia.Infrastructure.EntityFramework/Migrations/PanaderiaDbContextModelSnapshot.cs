@@ -22,23 +22,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Panaderia.Domain.Entidades.Categoria", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categorias");
-                });
-
             modelBuilder.Entity("Panaderia.Domain.Entidades.MovimientoStock", b =>
                 {
                     b.Property<int>("Id")
@@ -50,7 +33,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Fecha")
+                    b.Property<DateTime?>("Fecha")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Observaciones")
@@ -103,8 +86,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriaId");
-
                     b.ToTable("Productos", (string)null);
                 });
 
@@ -117,22 +98,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                         .IsRequired();
 
                     b.Navigation("Producto");
-                });
-
-            modelBuilder.Entity("Panaderia.Domain.Entidades.Producto", b =>
-                {
-                    b.HasOne("Panaderia.Domain.Entidades.Categoria", "Categoria")
-                        .WithMany("Productos")
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categoria");
-                });
-
-            modelBuilder.Entity("Panaderia.Domain.Entidades.Categoria", b =>
-                {
-                    b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
 ﻿using Panaderia.Application.DTOs;
+using Panaderia.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace Panaderia.Application.Interfaces
 {
     public interface IProductoService
     {
-        Task<ProductoDTO> ObtenerPorIdAsync(int id);
+        Task<Producto> ObtenerPorIdAsync(int id);
 
-        Task<List<ProductoDTO>> ObtenerTodosAsync();
+        Task<List<Producto>> ObtenerTodosAsync();
 
-        Task<int> CrearAsync(ProductoDTO dto);
+        Task<bool> CrearAsync(Producto dto);
 
-        Task<bool> ActualizarAsync(int id,ProductoDTO dto);
+        Task<bool> ActualizarAsync(int id,Producto dto);
 
         Task<bool> EliminarAsync(int id);
     }

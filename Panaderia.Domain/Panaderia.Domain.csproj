@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Entidades\Categoria.cs" />
+  </ItemGroup>
+
 </Project>

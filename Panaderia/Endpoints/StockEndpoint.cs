@@ -10,8 +10,8 @@ namespace Panaderia.WebApi.Endpoints
     {
         public void MapEndpoints(IEndpointRouteBuilder app)
         {
-            var stockGroup = app.MapGroup("/api/stock")
-                            .RequireAuthorization();
+            var stockGroup = app.MapGroup("/api/stock").WithOpenApi();
+                            //.RequireAuthorization();
 
             //stockGroup.MapGet("/{codigo:int}", stockPorCodigo)
             //   .WithName("Stock")
@@ -26,7 +26,7 @@ namespace Panaderia.WebApi.Endpoints
                .WithOpenApi();
         }
         
-        public async Task<IResult> CrearProducto([FromBody] ProductoDTO dto, IApplicationDbContext _db)
+        public async Task<IResult> CrearProducto([FromBody] ProductoDTO dto, IProductoService _service)
         {
             try {
                 var producto = new Producto
@@ -35,9 +35,10 @@ namespace Panaderia.WebApi.Endpoints
                     PrecioCompra = dto.PrecioCompra,
                     PrecioVenta = dto.PrecioVenta,
                 };
-                _db.Productos.Add(producto);
-                await _db.SaveChangesAsync();
-                return Results.Created($"/api/stock/productos/{producto.Id}", producto);
+                if((await _service.CrearAsync(producto))){
+                    return Results.Created($"/api/stock/productos/{producto.Id}", producto);
+                }
+                return Results.Problem("Hubo un problema al crear");
 
             } catch (Exception ex) {
                 return Results.Problem(ex.Message);

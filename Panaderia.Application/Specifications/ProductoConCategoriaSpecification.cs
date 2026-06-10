@@ -12,7 +12,7 @@ namespace Panaderia.Application.Specifications
         public ProductoConCategoriaSpecification(int? categoriaId = null)
             : base(p => !categoriaId.HasValue || p.CategoriaId == categoriaId.Value)
         {
-            AddInclude(p => p.Categoria!);
+            //AddInclude(p => p.Categoria!);
         }
     }
 }
