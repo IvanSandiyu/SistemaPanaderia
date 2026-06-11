@@ -20,9 +20,24 @@ namespace Panaderia.Application.Services
             _context = context;
         }
 
-        public Task<bool> ActualizarAsync(int id, Producto dto)
+        public async Task<bool> ActualizarAsync(int id, ProductoDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto == null)
+                return false;
+
+            var p = await _context.Productos.FindAsync(id);
+            if (p is null)
+                return false;
+
+            p.Nombre = dto.Nombre;
+            p.PrecioCompra = dto.PrecioCompra;
+            p.PrecioVenta = dto.PrecioVenta;
+            p.StockActual = dto.StockActual;
+
+            await _context.SaveChangesAsync();
+            return true;
+
+
         }
 
         public async Task<bool> CrearAsync(Producto dto)

@@ -16,7 +16,7 @@ namespace Panaderia.Application.Interfaces
 
         Task<bool> CrearAsync(Producto dto);
 
-        Task<bool> ActualizarAsync(int id,Producto dto);
+        Task<bool> ActualizarAsync(int id,ProductoDTO dto);
 
         Task<bool> EliminarAsync(int id);
     }
