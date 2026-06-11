@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Panaderia.Application.DTOs;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades;
+using System.ComponentModel;
 
 namespace Panaderia.WebApi.Endpoints
 {
@@ -11,17 +12,16 @@ namespace Panaderia.WebApi.Endpoints
         public void MapEndpoints(IEndpointRouteBuilder app)
         {
             var stockGroup = app.MapGroup("/api/stock").WithOpenApi();
-                            //.RequireAuthorization();
+            //.RequireAuthorization();
 
-            //stockGroup.MapGet("/{codigo:int}", stockPorCodigo)
-            //   .WithName("Stock")
-            //   .WithOpenApi();
+            stockGroup.MapGet("/{id:int}", ProductoPorCodigo)
+               .WithOpenApi();
 
-            //stockGroup.MapGet("/", stock)
-            //   .WithName("getStockName")
-            //   .WithOpenApi();
+            stockGroup.MapGet("/", VerProductos)
+               .WithName("productos")
+               .WithOpenApi();
 
-            stockGroup.MapPost("/productos", CrearProducto)
+            stockGroup.MapPost("/crearproductos", CrearProducto)
                .WithName("crearProductos")
                .WithOpenApi();
         }
@@ -44,6 +44,32 @@ namespace Panaderia.WebApi.Endpoints
                 return Results.Problem(ex.Message);
             }
 
+        }
+
+        public async Task<List<Producto>> VerProductos(IProductoService _service)
+        {
+            List<Producto> productos;
+            try {
+                 productos = await _service.ObtenerTodosAsync();
+                return productos;
+
+            }catch(Exception ex) {
+                return null;
+            }
+        }
+        
+        public async Task<Producto> ProductoPorCodigo(int id, IProductoService _service)
+        {
+            try {
+                if (id <= 0)
+                    return null;
+
+                var p = await _service.ObtenerPorIdAsync(id);
+                return p;
+
+            } catch (Exception ex) {
+                return null;
+            }
         }
     }
 

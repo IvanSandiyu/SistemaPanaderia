@@ -41,14 +41,16 @@ namespace Panaderia.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<Producto> ObtenerPorIdAsync(int id)
+        public async Task<Producto> ObtenerPorIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Productos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task<List<Producto>> ObtenerTodosAsync()
+        public async Task<List<Producto>> ObtenerTodosAsync()
         {
-            throw new NotImplementedException();
+            List<Producto> productos;
+            productos = await _context.Productos.AsNoTracking().ToListAsync();
+            return productos;
         }
     }
 }
