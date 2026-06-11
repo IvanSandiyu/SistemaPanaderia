@@ -16,6 +16,8 @@ namespace Panaderia.Domain.Entidades
         public decimal PrecioVenta { get; set; }
         public int StockActual { get; set; } // Actúa como caché rápido de lectura
 
+        public bool? Activo { get; set; } = true;
+
         // Propiedades de navegación
         //public Categoria? Categoria { get; set; }
     }

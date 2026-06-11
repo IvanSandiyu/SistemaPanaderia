@@ -28,6 +28,9 @@ namespace Panaderia.WebApi.Endpoints
             stockGroup.MapPost("/modificarproducto/{id:int}", ActualizarProducto)
                .WithName("modificarProductos")
                .WithOpenApi();
+
+            stockGroup.MapPut("/{id:int}", OcultarProducto)
+               .WithOpenApi();
         }
         
         public async Task<IResult> CrearProducto([FromBody] ProductoDTO dto, IProductoService _service)
@@ -89,6 +92,15 @@ namespace Panaderia.WebApi.Endpoints
             }catch(Exception ex) {
                 return false;
             }
+        }
+
+        public async Task<bool> OcultarProducto(int id, IProductoService _service)
+        {
+            if (id <= 0)
+                return false;
+
+            return await _service.OcultarProducto(id);
+            
         }
     }
 

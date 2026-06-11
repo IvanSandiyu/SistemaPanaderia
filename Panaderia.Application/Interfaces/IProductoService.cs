@@ -19,5 +19,7 @@ namespace Panaderia.Application.Interfaces
         Task<bool> ActualizarAsync(int id,ProductoDTO dto);
 
         Task<bool> EliminarAsync(int id);
+
+        Task<bool> OcultarProducto(int id);
     }
 }

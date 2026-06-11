@@ -33,6 +33,7 @@ namespace Panaderia.Application.Services
             p.PrecioCompra = dto.PrecioCompra;
             p.PrecioVenta = dto.PrecioVenta;
             p.StockActual = dto.StockActual;
+            p.Activo = dto.Activo;
 
             await _context.SaveChangesAsync();
             return true;
@@ -66,6 +67,22 @@ namespace Panaderia.Application.Services
             List<Producto> productos;
             productos = await _context.Productos.AsNoTracking().ToListAsync();
             return productos;
+        }
+
+        public async Task<bool> OcultarProducto(int id)
+        {
+            var p = await _context.Productos.FindAsync(id);
+            if (p is null)
+                return false;
+
+            if(p.Activo == true) {
+                p.Activo = false;
+            }else {
+                p.Activo = true;
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
