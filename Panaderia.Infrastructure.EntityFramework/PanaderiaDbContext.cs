@@ -13,9 +13,11 @@ namespace Panaderia.Infrastructure.EntityFramework
 
         public DbSet<Producto> Productos { get; set; }
 
-        //public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Venta> Ventas { get; set; }
 
         public DbSet<MovimientoStock> MovimientosStock { get; set; }
+        
+        public DbSet<DetalleVenta> DetalleVentas { get ; set ; }
 
         protected override void OnModelCreating(
             ModelBuilder modelBuilder)

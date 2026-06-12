@@ -17,6 +17,7 @@ builder.Services.AddScoped<IApplicationDbContext>(
     provider => provider.GetRequiredService<PanaderiaDbContext>());
 
 builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IVentaService, VentaService>();
 
 var app = builder.Build();
 

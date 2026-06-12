@@ -13,6 +13,8 @@ namespace Panaderia.Application.Interfaces
         DbSet<Producto> Productos { get; set; }
         //DbSet<Categoria> Categorias { get; set; }
         DbSet<MovimientoStock> MovimientosStock { get; set; }
+        DbSet<Venta> Ventas { get; set; }
+        DbSet<DetalleVenta> DetalleVentas{ get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

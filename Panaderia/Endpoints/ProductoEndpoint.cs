@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Panaderia.WebApi.Endpoints
 {
-    public class StockEndpoint : IEndpointDefinition
+    public class ProductoEndpoint : IEndpointDefinition
     {
         public void MapEndpoints(IEndpointRouteBuilder app)
         {
