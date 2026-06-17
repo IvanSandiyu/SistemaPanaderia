@@ -17,9 +17,22 @@ namespace Panaderia.Application.Specifications
         public Expression<Func<T, bool>> Criteria { get; }
         public List<Expression<Func<T, object>>> Includes { get; } = new();
 
+        public Expression<Func<T, object>>? OrderBy { get; private set; }
+
+        public Expression<Func<T, object>>? OrderByDescending { get; private set; }
+
         protected void AddInclude(Expression<Func<T, object>> includeExpression)
         {
             Includes.Add(includeExpression);
         }
+        protected void ApplyOrderByDescending(Expression<Func<T, object>> expression)
+        {
+            OrderByDescending = expression;
+        }
+        protected void ApplyOrderBy(Expression<Func<T, object>> expression)
+        {
+            OrderBy = expression;
+        }
+
     }
 }

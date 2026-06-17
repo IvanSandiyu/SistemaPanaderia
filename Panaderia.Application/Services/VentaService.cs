@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Panaderia.Application.DTOs;
 using Panaderia.Application.Interfaces;
+using Panaderia.Application.Specifications;
+using Panaderia.Application.Specifications.Ventas;
 using Panaderia.Domain.Entidades;
 using Panaderia.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Panaderia.Application.Services
 {
@@ -20,6 +16,28 @@ namespace Panaderia.Application.Services
         {
             _context = context;
         }
+
+        public async Task<List<VentaHistorialDTO>> HistorialVentas()
+        {
+            var spec = new HistorialVentasSpecification();
+            var query = SpecificationEvaluator<Venta>.GetQuery(_context.Ventas.AsQueryable(),spec);
+            var ventas = await query.ToListAsync();
+            return ventas.Select(v => new VentaHistorialDTO
+            {
+                Id = v.Id,
+                Fecha = v.Fecha,
+                Total = v.Total,
+
+                Detalles = v.Detalles.Select(d => new DetalleVentaHistorialDTO
+                {
+                    ProductoId = d.ProductoId,
+                    Cantidad = d.Cantidad,
+                    PrecioUnitario = d.PrecioUnitario,
+                    Subtotal = d.Subtotal
+                }).ToList()
+            }).ToList();
+        }
+
         public async Task<bool> VentaRealizada(VentaDto dto)
         {
             try {
