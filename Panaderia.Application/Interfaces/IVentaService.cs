@@ -11,6 +11,6 @@ namespace Panaderia.Application.Interfaces
     public interface IVentaService
     {
         public Task<bool> VentaRealizada(VentaDto productos);
-        public Task<List<VentaHistorialDTO>> HistorialVentas();
+        public Task<List<VentaHistorialDTO>> HistorialVentas(DateTime? desde, DateTime? hasta);
     }
 }

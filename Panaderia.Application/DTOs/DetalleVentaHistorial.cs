@@ -10,7 +10,7 @@ namespace Panaderia.Application.DTOs
     {
         public int ProductoId { get; set; }
 
-        public string Producto { get; set; } = string.Empty;
+        public string Producto { get; set; } 
 
         public int Cantidad { get; set; }
 

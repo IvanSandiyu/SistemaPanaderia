@@ -11,5 +11,5 @@ namespace Panaderia.Application.DTOs
         decimal PrecioCompra,
         decimal PrecioVenta,
         int StockActual,
-        bool? Activo);
+        bool Activo);
 }

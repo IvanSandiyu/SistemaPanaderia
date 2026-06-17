@@ -30,9 +30,9 @@ namespace Panaderia.WebApi.Endpoints
             return await _service.VentaRealizada(venta);
         }
         
-        public async Task<IResult> HistorialVentas(IVentaService _service)
+        public async Task<IResult> HistorialVentas(DateTime? desde, DateTime? hasta,IVentaService _service)
         {
-            var listVentas = await  _service.HistorialVentas();
+            var listVentas = await  _service.HistorialVentas(desde,hasta);
             return Results.Ok(listVentas);
         }
     }

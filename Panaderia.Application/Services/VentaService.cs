@@ -5,6 +5,7 @@ using Panaderia.Application.Specifications;
 using Panaderia.Application.Specifications.Ventas;
 using Panaderia.Domain.Entidades;
 using Panaderia.Domain.Enums;
+using System.ComponentModel.Design;
 
 namespace Panaderia.Application.Services
 {
@@ -17,25 +18,37 @@ namespace Panaderia.Application.Services
             _context = context;
         }
 
-        public async Task<List<VentaHistorialDTO>> HistorialVentas()
+        public async Task<List<VentaHistorialDTO>> HistorialVentas(DateTime? desde, DateTime? hasta)
         {
             var spec = new HistorialVentasSpecification();
-            var query = SpecificationEvaluator<Venta>.GetQuery(_context.Ventas.AsQueryable(),spec);
-            var ventas = await query.ToListAsync();
-            return ventas.Select(v => new VentaHistorialDTO
-            {
-                Id = v.Id,
-                Fecha = v.Fecha,
-                Total = v.Total,
+            var query = SpecificationEvaluator<Venta>.GetQuery(_context.Ventas.AsQueryable(), spec);
 
-                Detalles = v.Detalles.Select(d => new DetalleVentaHistorialDTO
+            if (desde.HasValue) {
+                query = query.Where(x => x.Fecha >= desde.Value);
+            }
+
+            if (hasta.HasValue) {
+                query = query.Where(x => x.Fecha <= hasta.Value);
+            }
+            var ventas = await _context.Ventas.Include(x => x.Detalles).ThenInclude(x => x.Producto).ToListAsync();
+
+            //var ventas = await query.ToListAsync();
+            return ventas.Select(v => new VentaHistorialDTO
                 {
-                    ProductoId = d.ProductoId,
-                    Cantidad = d.Cantidad,
-                    PrecioUnitario = d.PrecioUnitario,
-                    Subtotal = d.Subtotal
-                }).ToList()
-            }).ToList();
+                    Id = v.Id,
+                    Fecha = v.Fecha,
+                    Total = v.Total,
+
+                    Detalles = v.Detalles.Select(d => new DetalleVentaHistorialDTO
+                    {
+                        ProductoId = d.ProductoId,
+                        Cantidad = d.Cantidad,
+                        Producto = d.Producto.Nombre,
+                        PrecioUnitario = d.PrecioUnitario,
+                        Subtotal = d.Subtotal,
+                        
+                    }).ToList()
+                }).ToList();
         }
 
         public async Task<bool> VentaRealizada(VentaDto dto)
