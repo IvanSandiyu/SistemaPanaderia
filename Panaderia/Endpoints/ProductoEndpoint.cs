@@ -17,7 +17,7 @@ namespace Panaderia.WebApi.Endpoints
             stockGroup.MapGet("/{id:int}", ProductoPorCodigo)
                .WithOpenApi();
 
-            stockGroup.MapGet("/", VerProductos)
+            stockGroup.MapGet("/productos", VerProductos)
                .WithName("productos")
                .WithOpenApi();
 

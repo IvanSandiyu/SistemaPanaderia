@@ -4,6 +4,7 @@ using Panaderia.Application.Services;
 using Panaderia.Infrastructure.EntityFramework;
 using Panaderia.WebApi.Endpoints;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -19,7 +20,25 @@ builder.Services.AddScoped<IApplicationDbContext>(
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 
+
+
+//Habilitamos el CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("BlazorPolicy", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5088",
+                "https://localhost:7199")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+app.UseHttpsRedirection();
+app.UseCors("BlazorPolicy");
 
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();

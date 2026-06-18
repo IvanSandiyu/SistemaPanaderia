@@ -1,0 +1,66 @@
+﻿@page "/productos/editar/{Id:int}"
+@using Panaderia.Blazor.Models
+@using Panaderia.Blazor.Services
+
+@inject ProductoService ProductoService
+<h3>EditarProducto</h3>
+@if (Producto is not null) {
+    <EditForm Model="Producto" OnValidSubmit="Guardar">
+
+        <div class="mb-3">
+            <label>Nombre</label>
+            <InputText class="form-control"
+                       @bind-Value="Producto.Nombre" />
+        </div>
+
+        <div class="mb-3">
+            <label>Precio Compra</label>
+            <InputNumber class="form-control"
+                         @bind-Value="Producto.PrecioCompra" />
+        </div>
+
+        <div class="mb-3">
+            <label>Precio Venta</label>
+            <InputNumber class="form-control"
+                         @bind-Value="Producto.PrecioVenta" />
+        </div>
+
+        <div class="mb-3">
+            <label>Stock</label>
+            <InputNumber class="form-control"
+                         @bind-Value="Producto.StockActual" />
+        </div>
+
+        <button class="btn btn-primary">
+            Guardar
+        </button>
+
+    </EditForm>
+}
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public ProductoDto Producto = new();
+    [Inject]
+    NavigationManager Navigation { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Producto = await ProductoService.ObtenerPorId(Id);
+    }
+
+    private async Task Guardar()
+    {
+        var actualizado =
+            await ProductoService.Actualizar(Producto.Id, Producto);
+
+        if (actualizado) {
+            Navigation.NavigateTo("/productos");
+        }
+    }
+
+
+}

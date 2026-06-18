@@ -21,7 +21,7 @@ namespace Panaderia.WebApi.Endpoints
                 .WithName("historialVentas")
                 .WithOpenApi();
         }
-        
+        //Cambiar A results(bad request,ok,etc)
         public async Task<bool> GenerarVenta(VentaDto venta, IVentaService _service)
         {
             if (venta is null)

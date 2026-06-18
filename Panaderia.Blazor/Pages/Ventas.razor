@@ -1,0 +1,148 @@
+﻿@page "/ventas"
+@using Panaderia.Blazor.Models
+@using Panaderia.Blazor.Services
+
+@inject ProductoService ProductoService
+@inject VentaService VentaService
+
+<h3>Ventas</h3>
+
+<div class="row">
+
+    <div class="col-8">
+
+        <h4>Productos</h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var producto in Productos) {
+                    <tr>
+                        <td>@producto.Nombre</td>
+                        <td>$ @producto.PrecioVenta</td>
+                        <td>
+                            <button class="btn btn-success"
+                                    @onclick="() => AgregarAlCarrito(producto)">
+                                +
+                            </button>
+                            <button class="btn btn-danger"
+                                    @onclick="() => EliminarDelCarrito(producto.Id)">
+                                -
+                            </button>
+                        </td>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="col-4">
+
+        <h4>Carrito</h4>
+
+        @if (Carrito.Any()) {
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cant.</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Carrito) {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Cantidad</td>
+                            <td>$ @(item.Cantidad* item.PrecioVenta)</td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+            <h5>Total: $ @Total</h5>
+
+            <button class="btn btn-primary"
+                    @onclick="RealizarPago">
+                Realizar Pago
+            </button>
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    private List<ProductoDto> Productos = new();
+
+    private List<CarritoItemDto> Carrito = new();
+
+    private decimal Total =>
+        Carrito.Sum(x => x.Cantidad * x.PrecioVenta);
+
+    protected override async Task OnInitializedAsync()
+    {
+        Productos = await ProductoService.ObtenerTodos();
+    }
+
+    private void AgregarAlCarrito(ProductoDto producto)
+    {
+        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id);
+
+        if (item is null) {
+            Carrito.Add(new CarritoItemDto
+            {
+                Id = producto.Id,
+                Nombre = producto.Nombre,
+                PrecioVenta = producto.PrecioVenta,
+                Cantidad = 1
+            });
+        } else {
+            item.Cantidad++;
+        }
+    }
+    private void EliminarDelCarrito(int id)
+    {
+        var item = Carrito.FirstOrDefault(x => x.Id == id);
+        if(item is not null){
+            Carrito.Remove(item);
+            item.Cantidad--;
+        }
+    }
+
+    private async Task RealizarPago()
+    {
+        var venta = new VentaDto
+        {
+            Detalles = Carrito.Select(x => new DetalleVentaDto
+            {
+                ProductoId = x.Id,
+                Cantidad = x.Cantidad
+            }).ToList()
+        };
+
+        var resultado = await VentaService.RealizarVenta(venta);
+
+        if (resultado) {
+            Carrito.Clear();
+        }
+    }
+}

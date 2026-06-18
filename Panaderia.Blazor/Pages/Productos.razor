@@ -1,0 +1,55 @@
+﻿@page "/productos"
+@using Panaderia.Blazor.Models
+@using Panaderia.Blazor.Services
+
+@inject ProductoService ProductoService
+
+<h3>Productos</h3>
+
+@if (productos is null) {
+    <p>Cargando...</p>
+} else {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Precio Venta</th>
+                <th>Stock</th>
+                <th>Editar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var producto in productos) {
+                <tr>
+                    <td>@producto.Id</td>
+                    <td>@producto.Nombre</td>
+                    <td>@producto.PrecioVenta</td>
+                    <td>@producto.StockActual</td>
+                    <td>
+                        <button class="btn btn-info" 
+                            @onclick="() => EditarProducto(producto.Id)">
+                            ✏️
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<ProductoDto>? productos;
+    [Inject]
+    NavigationManager Navigation { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await ProductoService.ObtenerTodos();
+    }
+
+    private void EditarProducto(int id)
+    {
+        Navigation.NavigateTo($"/productos/editar/{id}");
+    }
+}
