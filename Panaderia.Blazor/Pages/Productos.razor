@@ -5,7 +5,7 @@
 @inject ProductoService ProductoService
 
 <h3>Productos</h3>
-
+<button class="btn btn-secondary" @onclick="() => Crear()"> Crear nuevo producto</button>
 @if (productos is null) {
     <p>Cargando...</p>
 } else {
@@ -51,5 +51,10 @@
     private void EditarProducto(int id)
     {
         Navigation.NavigateTo($"/productos/editar/{id}");
+    }
+
+    private void Crear()
+    {
+        Navigation.NavigateTo($"/productos/nuevo");
     }
 }

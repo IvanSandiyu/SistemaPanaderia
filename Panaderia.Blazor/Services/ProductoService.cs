@@ -31,5 +31,14 @@ namespace Panaderia.Blazor.Services
 
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> CrearProducto(ProductoDto dto)
+        {
+            var response = await _http.PostAsJsonAsync(
+                "api/stock/crearproductos",
+                dto);
+
+            return response.IsSuccessStatusCode;
+        }
     }
 }

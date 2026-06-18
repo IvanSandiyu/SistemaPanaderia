@@ -41,6 +41,7 @@ namespace Panaderia.WebApi.Endpoints
                     Nombre = dto.Nombre,
                     PrecioCompra = dto.PrecioCompra,
                     PrecioVenta = dto.PrecioVenta,
+                    StockActual = dto.StockActual
                 };
                 if((await _service.CrearAsync(producto))){
                     return Results.Created($"/api/stock/productos/{producto.Id}", producto);
