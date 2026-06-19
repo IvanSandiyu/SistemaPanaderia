@@ -84,13 +84,51 @@
             <h5>Total: $ @Total</h5>
 
             <button class="btn btn-primary"
-                    @onclick="RealizarPago">
+                    @onclick="AbrirModalPago">
                 Realizar Pago
             </button>
-
         }
-
     </div>
+
+    @if (MostrarModalPago) {
+        <div class="modal-backdrop">
+            <div class="card p-3 shadow">
+
+                <h5>Método de Pago</h5>
+
+                <InputSelect class="form-select"
+                             @bind-Value="MetodoPago">
+
+                    <option>Efectivo</option>
+                    <option>Transferencia</option>
+                    <option>Fiado</option>
+                    <option>Regalo</option>
+
+                </InputSelect>
+
+                <div class="mt-3">
+                    <label>Observaciones</label>
+
+                    <InputTextArea class="form-control"
+                                   @bind-Value="Observaciones" />
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-success"
+                            @onclick="RealizarPago">
+                        Confirmar
+                    </button>
+
+                    <button class="btn btn-secondary ms-2"
+                            @onclick="CerrarModal">
+                        Cancelar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    }
+
 
 </div>
 
@@ -99,7 +137,11 @@
     private List<ProductoDto> Productos = new();
 
     private List<CarritoItemDto> Carrito = new();
+    private bool MostrarModalPago = false;
 
+    private string MetodoPago = "Efectivo";
+
+    private string Observaciones = "";
 
     private decimal Total =>
         Carrito.Sum(x => x.Cantidad * x.PrecioVenta);
@@ -138,6 +180,9 @@
     {
         var venta = new VentaDto
         {
+            MetodoPago = MetodoPago,
+            Observaciones = Observaciones,
+
             Detalles = Carrito.Select(x => new DetalleVentaDto
             {
                 ProductoId = x.Id,
@@ -150,6 +195,7 @@
         if (resultado) {
             Carrito.Clear();
             Productos = await ProductoService.ObtenerTodos();
+            MostrarModalPago = false;
         }
     }
     private bool PuedeAgregar(ProductoDto producto)
@@ -161,4 +207,14 @@
 
         return item.Cantidad < producto.StockActual;
     }
+
+    private void AbrirModalPago()
+    {
+        MostrarModalPago = true;
+    }
+    private void CerrarModal()
+    {
+        MostrarModalPago = false;
+    }
+
 }

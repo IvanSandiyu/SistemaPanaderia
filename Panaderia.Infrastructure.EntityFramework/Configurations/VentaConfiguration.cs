@@ -19,6 +19,8 @@ namespace Panaderia.Infrastructure.EntityFramework.Configurations
 
             builder.Property(v => v.Fecha).IsRequired();
             builder.Property(v => v.Total).HasColumnType("decimal(18,2)");
+            builder.Property(v => v.MetodoPago);
+            builder.Property(v => v.Observaciones);
 
             builder.HasMany(v => v.Detalles)
             .WithOne(v => v.Venta)

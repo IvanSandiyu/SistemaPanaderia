@@ -58,6 +58,8 @@ namespace Panaderia.Application.Services
                 {
                     Fecha = DateTime.UtcNow,
                     Total = 0,
+                    MetodoPago = dto.MetodoPago,
+                    Observaciones = dto.Observaciones
                 };
 
                 foreach (var detalle in dto.Detalles) {

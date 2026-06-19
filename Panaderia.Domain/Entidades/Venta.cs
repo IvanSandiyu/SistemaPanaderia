@@ -16,5 +16,9 @@ namespace Panaderia.Domain.Entidades
 
         public ICollection<DetalleVenta> Detalles { get; set; } = new List<DetalleVenta>();
 
+        public string MetodoPago { get; set; }
+
+        public string? Observaciones { get; set; }
+
     }
 }
