@@ -1,0 +1,104 @@
+﻿@page "/historial-ventas"
+@using Panaderia.Blazor.Models
+@using Panaderia.Blazor.Services
+
+@inject VentaService VentaService
+<h3>Historial de Ventas</h3>
+<div class="row">
+    <div class="col-8">
+        @if (ventas is null) {
+            <p>Cargando...</p>
+        } else {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Total</th>
+                            <th>Ver productos</th>
+                        </tr>
+                    </thead>
+                 <tbody>
+                    @foreach (var v in ventas) {
+                        <tr>
+                            <td>@v.Id</td>
+                            <td>@v.Fecha.ToShortDateString()</td>
+                            <td>@v.Fecha.ToShortTimeString()</td>
+                            <td>@v.Total</td>
+                            <td>
+                                <button class="btn btn-info"
+                                        @onclick="() => VerVenta(v.Id)">
+                                    <i class="bi bi-eye"></i
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="col-4">
+
+        <h4>Detalles de la venta</h4>
+
+        @if (Item.Any()) {
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Subtotal</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Item) {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>$ @(item.Cantidad* item.PrecioVenta)</td>
+                            <td>@item.Cantidad</td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        }
+
+    </div>
+</div>
+
+
+
+@code {
+    private List<VentaHistorialDto>? ventas = new();
+    private List<CarritoItemDto> Item = new();
+    public decimal Subtotal { get; set; }
+    //Mostrar detalleventahistorialdto
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        ventas = await VentaService.HistorialVentas();
+    }
+
+    private void VerVenta(int id)
+    {
+        Item.Clear();
+        var v = ventas.FirstOrDefault(x => x.Id == id);
+
+        foreach (var item in v.Detalles) {
+            Item.Add(new CarritoItemDto
+            {
+                Nombre = item.Producto,
+                PrecioVenta = item.PrecioUnitario,
+                Cantidad = item.Cantidad,
+
+            });
+            Subtotal = item.Subtotal;
+        }
+    }
+}

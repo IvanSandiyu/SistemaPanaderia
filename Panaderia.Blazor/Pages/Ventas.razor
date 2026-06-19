@@ -18,7 +18,8 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Precio</th>
-                    <th></th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
 
@@ -27,8 +28,10 @@
                     <tr>
                         <td>@producto.Nombre</td>
                         <td>$ @producto.PrecioVenta</td>
+                        <td>@producto.StockActual</td>
                         <td>
                             <button class="btn btn-success"
+                                    disabled="@(!PuedeAgregar(producto))"
                                     @onclick="() => AgregarAlCarrito(producto)">
                                 +
                             </button>
@@ -45,6 +48,7 @@
             </tbody>
 
         </table>
+        
 
     </div>
 
@@ -83,6 +87,7 @@
                     @onclick="RealizarPago">
                 Realizar Pago
             </button>
+
         }
 
     </div>
@@ -94,6 +99,7 @@
     private List<ProductoDto> Productos = new();
 
     private List<CarritoItemDto> Carrito = new();
+
 
     private decimal Total =>
         Carrito.Sum(x => x.Cantidad * x.PrecioVenta);
@@ -143,6 +149,16 @@
 
         if (resultado) {
             Carrito.Clear();
+            Productos = await ProductoService.ObtenerTodos();
         }
+    }
+    private bool PuedeAgregar(ProductoDto producto)
+    {
+        var item = Carrito.FirstOrDefault(x => x.Id== producto.Id);
+
+        if (item is null)
+            return producto.StockActual > 0;
+
+        return item.Cantidad < producto.StockActual;
     }
 }
