@@ -56,7 +56,7 @@ namespace Panaderia.Application.Services
             try {
                 var venta = new Venta
                 {
-                    Fecha = DateTime.UtcNow,
+                    Fecha = DateTime.Now,
                     Total = 0,
                     MetodoPago = dto.MetodoPago,
                     Observaciones = dto.Observaciones

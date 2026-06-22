@@ -91,40 +91,67 @@
     </div>
 
     @if (MostrarModalPago) {
-        <div class="modal-backdrop">
-            <div class="card p-3 shadow">
+        <div class="modal fade show d-block"
+             tabindex="-1"
+             style="background-color: rgba(0,0,0,0.5);">
 
-                <h5>Método de Pago</h5>
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-                <InputSelect class="form-select"
-                             @bind-Value="MetodoPago">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Método de Pago</h5>
 
-                    <option>Efectivo</option>
-                    <option>Transferencia</option>
-                    <option>Fiado</option>
-                    <option>Regalo</option>
+                        <button type="button"
+                                class="btn-close"
+                                @onclick="CerrarModal">
+                        </button>
+                    </div>
 
-                </InputSelect>
+                    <div class="modal-body">
 
-                <div class="mt-3">
-                    <label>Observaciones</label>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Método de Pago
+                            </label>
 
-                    <InputTextArea class="form-control"
-                                   @bind-Value="Observaciones" />
+                            <InputSelect class="form-select"
+                                         @bind-Value="MetodoPago">
+
+                                <option>Efectivo</option>
+                                <option>Transferencia</option>
+                                <option>Fiado</option>
+                                <option>Regalo</option>
+
+                            </InputSelect>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Observaciones
+                            </label>
+
+                            <InputTextArea class="form-control"
+                                           rows="3"
+                                           @bind-Value="Observaciones" />
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button class="btn btn-secondary"
+                                @onclick="CerrarModal">
+                            Cancelar
+                        </button>
+
+                        <button class="btn btn-success"
+                                @onclick="RealizarPago">
+                            Confirmar
+                        </button>
+
+                    </div>
+
                 </div>
-
-                <div class="mt-3">
-                    <button class="btn btn-success"
-                            @onclick="RealizarPago">
-                        Confirmar
-                    </button>
-
-                    <button class="btn btn-secondary ms-2"
-                            @onclick="CerrarModal">
-                        Cancelar
-                    </button>
-                </div>
-
             </div>
         </div>
     }
