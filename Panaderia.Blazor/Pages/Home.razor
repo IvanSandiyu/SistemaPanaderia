@@ -2,18 +2,86 @@
 
 <PageTitle>Panadería</PageTitle>
 
-<h1>Sistema de Gestión de Panadería</h1>
+<div class="container mt-5">
 
-<p>Bienvenido al sistema.</p>
+    <div class="text-center mb-5">
+        <h1 class="display-4">Sistema de Gestión de Panadería</h1>
+        <p class="lead">
+            Administración de productos, stock y ventas.
+        </p>
+    </div>
 
-<div>
-    <a href="/productos">Productos</a>
-</div>
+    <div class="row g-4">
 
-<div>
-    <a href="/ventas">Ventas</a>
-</div>
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
 
-<div>
-    <a href="/historial-ventas">Historial Ventas</a>
+                    @* <h3>📦</h3> *@
+                    <i class="bi bi-box-seam fs-1"></i>
+                    <h5 class="card-title">
+                        Productos
+                    </h5>
+
+                    <p class="card-text">
+                        Gestiona el catálogo de productos y el stock disponible.
+                    </p>
+
+                    <a href="/productos"
+                       class="btn btn-primary">
+                        Ir a Productos
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+
+                    @* <h3>🛒</h3> *@
+                    <i class="bi bi-cart-check fs-1"></i>
+                    <h5 class="card-title">
+                        Ventas
+                    </h5>
+
+                    <p class="card-text">
+                        Registra nuevas ventas y controla el stock automáticamente.
+                    </p>
+
+                    <a href="/ventas"
+                       class="btn btn-success">
+                        Ir a Ventas
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+
+                    @* <h3>📋</h3> *@
+                    <i class="bi bi-clock-history fs-1"></i>
+                    <h5 class="card-title">
+                        Historial
+                    </h5>
+
+                    <p class="card-text">
+                        Consulta todas las ventas realizadas y sus detalles.
+                    </p>
+
+                    <a href="/historial-ventas"
+                       class="btn btn-warning">
+                        Ver Historial
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>

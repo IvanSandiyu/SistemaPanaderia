@@ -16,7 +16,5 @@ namespace Panaderia.Application.Specifications.Ventas
             AddInclude(x => x.Detalles);
             ApplyOrderByDescending(x => x.Fecha);
         }
-
-
     }
 }

@@ -1,23 +1,74 @@
-﻿<div class="nav-item px-3">
-    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-        Inicio
-    </NavLink>
+﻿@using Microsoft.AspNetCore.Components
+
+<div class="sidebar-menu">
+
+    <button class="btn btn-outline-light w-100 mb-4"
+            @onclick="Toggle">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <nav class="nav flex-column">
+
+        <NavLink class="nav-link"
+                 href="/"
+                 Match="NavLinkMatch.All">
+
+            <i class="bi bi-house-door-fill"></i>
+
+            @if (!Contraido) {
+                <span class="ms-2">Inicio</span>
+            }
+
+        </NavLink>
+
+        <NavLink class="nav-link"
+                 href="/productos">
+
+            <i class="bi bi-box-seam-fill"></i>
+
+            @if (!Contraido) {
+                <span class="ms-2">Productos</span>
+            }
+
+        </NavLink>
+
+        <NavLink class="nav-link"
+                 href="/ventas">
+
+            <i class="bi bi-cart-check-fill"></i>
+
+            @if (!Contraido) {
+                <span class="ms-2">Ventas</span>
+            }
+
+        </NavLink>
+
+        <NavLink class="nav-link"
+                 href="/historial-ventas">
+
+            <i class="bi bi-clock-history"></i>
+
+            @if (!Contraido) {
+                <span class="ms-2">Historial</span>
+            }
+
+        </NavLink>
+
+    </nav>
+
 </div>
 
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="/productos">
-        Productos
-    </NavLink>
-</div>
+@code {
 
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="/ventas">
-        Ventas
-    </NavLink>
-</div>
+    [Parameter]
+    public bool Contraido { get; set; }
 
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="/historial-ventas">
-        Historial Ventas
-    </NavLink>
-</div>
+    [Parameter]
+    public EventCallback OnToggle { get; set; }
+
+    private async Task Toggle()
+    {
+        await OnToggle.InvokeAsync();
+    }
+
+}

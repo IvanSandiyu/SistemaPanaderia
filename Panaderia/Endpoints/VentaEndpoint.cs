@@ -17,7 +17,7 @@ namespace Panaderia.WebApi.Endpoints
                 .WithName("generarVenta")
                 .WithOpenApi();
 
-            ventaGroup.MapGet("/historialventas", HistorialVentas)
+            ventaGroup.MapGet("/historialventas/{pagina:int}", HistorialVentas)
                 .WithName("historialVentas")
                 .WithOpenApi();
         }
@@ -30,9 +30,9 @@ namespace Panaderia.WebApi.Endpoints
             return await _service.VentaRealizada(venta);
         }
         
-        public async Task<IResult> HistorialVentas(DateTime? desde, DateTime? hasta,IVentaService _service)
+        public async Task<IResult> HistorialVentas(DateTime? desde, DateTime? hasta, int? pagina,IVentaService _service)
         {
-            var listVentas = await  _service.HistorialVentas(desde,hasta);
+            var listVentas = await  _service.HistorialVentas(desde,hasta,pagina);
             return Results.Ok(listVentas);
         }
     }
