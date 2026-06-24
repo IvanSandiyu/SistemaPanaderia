@@ -1,6 +1,8 @@
 ﻿using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
+using Panaderia.Domain.Entidades.Productos;
+using Panaderia.Domain.Entidades.Ventas;
 namespace Panaderia.Infrastructure.EntityFramework
 {
     public class PanaderiaDbContext: DbContext, IApplicationDbContext

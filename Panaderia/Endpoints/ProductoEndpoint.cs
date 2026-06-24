@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Panaderia.Application.DTOs;
+using Panaderia.Application.DTOs.Producto;
 using Panaderia.Application.Interfaces;
-using Panaderia.Domain.Entidades;
+using Panaderia.Domain.Entidades.Productos;
 using System.ComponentModel;
 
 namespace Panaderia.WebApi.Endpoints

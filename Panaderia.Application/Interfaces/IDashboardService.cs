@@ -1,4 +1,6 @@
-﻿using Panaderia.Application.DTOs;
+﻿using Panaderia.Application.DTOs.Dashboard;
+using Panaderia.Application.DTOs.Venta;
+using Panaderia.Application.DTOs.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Linq;

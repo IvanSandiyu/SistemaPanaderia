@@ -1,4 +1,4 @@
-﻿using Panaderia.Domain.Entidades;
+﻿using Panaderia.Domain.Entidades.Productos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Panaderia.Application.DTOs;
+using Panaderia.Application.DTOs.Producto;
 using Panaderia.Application.Interfaces;
-using Panaderia.Domain.Entidades;
+using Panaderia.Domain.Entidades.Productos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

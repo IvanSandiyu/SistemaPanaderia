@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Panaderia.Domain.Entidades;
+using Panaderia.Domain.Entidades.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Linq;

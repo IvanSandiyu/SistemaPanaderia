@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Panaderia.Domain.Entidades;
+using Panaderia.Domain.Entidades.Productos;
 
 namespace Panaderia.Infrastructure.EntityFramework.Configurations
 {

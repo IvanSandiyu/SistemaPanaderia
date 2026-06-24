@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using Panaderia.Application.DTOs;
+using Panaderia.Application.DTOs.Ventas;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades;
 

@@ -1,0 +1,147 @@
+﻿@page "/productos"
+@using Panaderia.Blazor.Models
+@using Panaderia.Blazor.Models.Productos
+@using Panaderia.Blazor.Services
+
+@inject ProductoService ProductoService
+@inject NavigationManager Navigation
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="mb-0">
+                <i class="bi bi-box-seam-fill me-2"></i>
+                Productos
+            </h2>
+
+            <small class="text-muted">
+                Gestión de productos y stock
+            </small>
+        </div>
+
+        <button class="btn btn-primary"
+                @onclick="Crear">
+
+            <i class="bi bi-plus-circle me-2"></i>
+            Nuevo Producto
+
+        </button>
+
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            @if (productos is null) {
+                <div class="text-center p-4">
+
+                    <div class="spinner-border text-primary"></div>
+
+                    <p class="mt-3">
+                        Cargando productos...
+                    </p>
+
+                </div>
+            } else {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Precio Venta</th>
+                                <th>Stock</th>
+                                <th width="120">Acciones</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var producto in productos) {
+                                <tr>
+
+                                    <td>
+                                        @producto.Id
+                                    </td>
+
+                                    <td>
+                                        <strong>@producto.Nombre</strong>
+                                    </td>
+
+                                    <td>
+                                        $ @producto.PrecioVenta
+                                    </td>
+
+                                    <td>
+
+                                        @if (producto.StockActual <= 0) {
+                                            <span class="badge bg-danger">
+                                                Sin Stock
+                                            </span>
+                                        } else if (producto.StockActual <= 10) {
+                                            <span class="badge bg-warning text-dark">
+                                                @producto.StockActual
+                                            </span>
+                                        } else {
+                                            <span class="badge bg-success">
+                                                @producto.StockActual
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <button class="btn btn-outline-primary btn-sm"
+                                                title="Editar"
+                                                @onclick="() => EditarProducto(producto.Id)">
+
+                                            <i class="bi bi-pencil-square"></i>
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+
+    private List<ProductoDto>? productos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await ProductoService.ObtenerTodos();
+    }
+
+    private void EditarProducto(int id)
+    {
+        Navigation.NavigateTo($"/productos/editar/{id}");
+    }
+
+    private void Crear()
+    {
+        Navigation.NavigateTo("/productos/nuevo");
+    }
+
+}

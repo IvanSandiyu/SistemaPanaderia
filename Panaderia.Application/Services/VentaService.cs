@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Panaderia.Application.DTOs;
+using Panaderia.Application.DTOs.Ventas;
 using Panaderia.Application.Interfaces;
 using Panaderia.Application.Specifications;
 using Panaderia.Application.Specifications.Ventas;
 using Panaderia.Domain.Entidades;
+using Panaderia.Domain.Entidades.Ventas;
 using Panaderia.Domain.Enums;
 using System.ComponentModel.Design;
 using System.Linq;

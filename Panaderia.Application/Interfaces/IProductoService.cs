@@ -1,5 +1,5 @@
-﻿using Panaderia.Application.DTOs;
-using Panaderia.Domain.Entidades;
+﻿using Panaderia.Application.DTOs.Producto;
+using Panaderia.Domain.Entidades.Productos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

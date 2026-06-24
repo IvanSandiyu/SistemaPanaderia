@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Panaderia.Domain.Entidades.Productos;
+using Panaderia.Domain.Entidades.Ventas;
 
 namespace Panaderia.Application.Interfaces
 {

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Panaderia.Application.DTOs;
+using Panaderia.Application.DTOs.Dashboard;
+using Panaderia.Application.DTOs.Venta;
+using Panaderia.Application.DTOs.Ventas;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades;
 using System;

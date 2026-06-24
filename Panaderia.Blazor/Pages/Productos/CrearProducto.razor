@@ -1,0 +1,75 @@
+﻿@page "/productos/nuevo"
+
+@using Panaderia.Blazor.Models
+@using Panaderia.Blazor.Models.Productos
+@using Panaderia.Blazor.Services
+
+@inject ProductoService ProductoService
+@inject NavigationManager Navigation
+
+<h3>Nuevo Producto</h3>
+
+<EditForm Model="Producto" OnValidSubmit="Guardar">
+
+    <div class="mb-3">
+        <label>Nombre</label>
+        <InputText class="form-control"
+                   @bind-Value="Producto.Nombre" />
+    </div>
+
+    <div class="mb-3">
+        <label>Precio Compra</label>
+        <InputNumber class="form-control"
+                     @bind-Value="Producto.PrecioCompra" />
+    </div>
+
+    <div class="mb-3">
+        <label>Precio Venta</label>
+        <InputNumber class="form-control"
+                     @bind-Value="Producto.PrecioVenta" />
+    </div>
+
+    <div class="mb-3">
+        <label>Stock</label>
+        <InputNumber class="form-control"
+                     @bind-Value="Producto.StockActual" />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Guardar
+    </button>
+
+    <button type="button"
+            class="btn btn-secondary ms-2"
+            @onclick="Cancelar">
+        Cancelar
+    </button>
+
+</EditForm>
+
+@code {
+
+    private ProductoDto Producto = new();
+    private string Mensaje { get; set; }
+    private bool MostrarMensaje { get; set; } = false;
+
+    private async Task Guardar()
+    {
+        var creado = await ProductoService.CrearProducto(Producto);
+
+        if (creado) {
+            Mensaje = "Producto creado con éxito";
+            MostrarMensaje = true;
+
+            StateHasChanged();
+
+            await Task.Delay(3000);
+            Navigation.NavigateTo("/productos");
+        }
+    }
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/productos");
+    }
+}

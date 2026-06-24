@@ -1,4 +1,4 @@
-﻿using Panaderia.Application.DTOs;
+﻿using Panaderia.Application.DTOs.Ventas;
 using Panaderia.Domain.Entidades;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿using Ardalis.Specification;
-using Panaderia.Domain.Entidades;
+using Panaderia.Domain.Entidades.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Linq;

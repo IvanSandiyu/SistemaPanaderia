@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Panaderia.Application.DTOs.Producto
+{
+    public record ProductoDTO (
+        string Nombre,
+        decimal PrecioCompra,
+        decimal PrecioVenta,
+        int StockActual,
+        bool Activo);
+}

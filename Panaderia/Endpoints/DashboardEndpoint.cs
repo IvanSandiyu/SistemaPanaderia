@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Panaderia.Application.DTOs;
+using Panaderia.Application.DTOs.Venta;
+using Panaderia.Application.DTOs.Ventas;
 using Panaderia.Application.Interfaces;
 using System.ComponentModel;
 
