@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Panaderia.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -16,7 +17,7 @@ namespace Panaderia.Domain.Entidades
 
         public ICollection<DetalleVenta> Detalles { get; set; } = new List<DetalleVenta>();
 
-        public string MetodoPago { get; set; }
+        public MetodoDePago MetodoPago { get; set; }
 
         public string? Observaciones { get; set; }
 

@@ -11,16 +11,22 @@ namespace Panaderia.WebApi.Endpoints
         public void MapEndpoints(IEndpointRouteBuilder app)
         {
             var dashGroup = app.MapGroup("api/dashboard")
-                .WithOpenApi(); 
+                .WithOpenApi();
 
-            //dashGroup.MapGet("/ventasdiarias", VentasDiarias)
-            //    .WithOpenApi();
+            dashGroup.MapGet("/ventapordia", VentasDiarias)
+                .WithOpenApi();
 
             dashGroup.MapGet("/masvendidos", MasVendidos)
                 .WithOpenApi();
 
             //dashGroup.MapGet("/metodos-pagos", MetodosPago)
             //    .WithOpenAp();
+        }
+
+        private async Task<List<VentaDiariaDto>> VentasDiarias(IDashboardService service)
+        {
+            var response = await service.VentasDiarias();
+            return response.ToList();
         }
 
         public async Task<List<ProductoMasVendidoDto>> MasVendidos(IDashboardService service)

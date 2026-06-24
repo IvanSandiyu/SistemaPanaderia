@@ -22,5 +22,11 @@ namespace Panaderia.Blazor.Services
             var response = await _http.PostAsJsonAsync("api/venta/generarventa", dto);
             return response.IsSuccessStatusCode;
         }
+
+        //public async Task<List<VentaHistorialDto>> HistorialVentas(int pagina)
+        //{
+        //    var response = await _http.GetFromJsonAsync<List<VentaHistorialDto>>($"api/venta/historialventas/{pagina}") ?? new();
+        //    return response;
+        //}
     }
 }

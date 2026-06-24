@@ -1,17 +1,189 @@
 ﻿@page "/dashboard"
-<div class="row">
 
-    <div class="col-md-3">
-        <div class="card border-success">
-            <div class="card-body">
-                <h6>Ventas Hoy</h6>
-                <h3>$25.400</h3>
+<div class="container-fluid">
+
+    <!-- ENCABEZADO -->
+
+    <div class="mb-4">
+
+        <h2>
+            <i class="bi bi-speedometer2 me-2"></i>
+            Dashboard
+        </h2>
+
+        <small class="text-muted">
+            Resumen general del negocio
+        </small>
+
+    </div>
+
+    <!-- KPIs -->
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Productos Vendidos Hoy
+                            </small>
+
+                            <h2 class="fw-bold text-primary">
+                                124
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-cart-check display-5 text-primary"></i>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Recaudación Hoy
+                            </small>
+
+                            <h2 class="fw-bold text-success">
+                                $85.450
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-cash-stack display-5 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Ganancia Estimada
+                            </small>
+
+                            <h2 class="fw-bold text-warning">
+                                $31.200
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-graph-up-arrow display-5 text-warning"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACCESOS RAPIDOS -->
+
+    <h4 class="mb-3">
+
+        <i class="bi bi-grid me-2"></i>
+        Dashboards
+
+    </h4>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body text-center p-5">
+
+                    <i class="bi bi-bar-chart-line-fill display-2 text-primary"></i>
+
+                    <h4 class="mt-3">
+                        Dashboard Ventas
+                    </h4>
+
+                    <p class="text-muted">
+                        Métricas de ventas, recaudación y evolución.
+                    </p>
+
+                    <a href="/dashboard/dashboard-ventas"
+                       class="btn btn-primary">
+
+                        <i class="bi bi-arrow-right-circle me-2"></i>
+                        Ingresar
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body text-center p-5">
+
+                    <i class="bi bi-pie-chart-fill display-2 text-success"></i>
+
+                    <h4 class="mt-3">
+                        Dashboard Productos
+                    </h4>
+
+                    <p class="text-muted">
+                        Productos más vendidos y distribución.
+                    </p>
+
+                    <a href="/dashboard/dashboard-productos"
+                       class="btn btn-success">
+
+                        <i class="bi bi-arrow-right-circle me-2"></i>
+                        Ingresar
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>
-
-@code {
-
-}

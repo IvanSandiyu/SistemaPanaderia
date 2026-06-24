@@ -40,5 +40,11 @@ namespace Panaderia.Blazor.Services
 
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<List<ProductoMasVendidoDto>> ProductoMasVendido()
+        {
+            var response = await _http.GetFromJsonAsync<List<ProductoMasVendidoDto>>("api/dashboard/masvendidos") ?? new();
+            return response;
+        }
     }
 }

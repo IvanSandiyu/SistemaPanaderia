@@ -4,6 +4,7 @@ using Panaderia.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Configurations
             builder.Property(v => v.Total).HasColumnType("decimal(18,2)");
             builder.Property(v => v.MetodoPago);
             builder.Property(v => v.Observaciones);
+            builder.Property(v => v.MetodoPago).HasConversion<string>();
 
             builder.HasMany(v => v.Detalles)
             .WithOne(v => v.Venta)

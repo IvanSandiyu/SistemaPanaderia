@@ -1,3 +1,4 @@
+using ApexCharts;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Panaderia.Blazor;
@@ -11,6 +12,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://
 builder.Services.AddScoped<ApiService>();
 builder.Services.AddScoped<ProductoService>();
 builder.Services.AddScoped<VentaService>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddApexCharts();
 
 
 await builder.Build().RunAsync();
