@@ -19,8 +19,8 @@ namespace Panaderia.WebApi.Endpoints
             dashGroup.MapGet("/masvendidos", MasVendidos)
                 .WithOpenApi();
 
-            //dashGroup.MapGet("/metodos-pagos", MetodosPago)
-            //    .WithOpenAp();
+            dashGroup.MapGet("/metodos-pagos", MetodoPago)
+                .WithOpenApi();
         }
 
         private async Task<List<VentaDiariaDto>> VentasDiarias(IDashboardService service)
@@ -33,6 +33,12 @@ namespace Panaderia.WebApi.Endpoints
         {
             var lista = await service.ProductosMasVendidos();
             return lista.ToList();
+        }
+
+        public async Task<List<MetodoPagoDTO>> MetodoPago(IDashboardService service)
+        {
+            var metodos = await service.MetodoDePago();
+            return metodos;
         }
     }
 }

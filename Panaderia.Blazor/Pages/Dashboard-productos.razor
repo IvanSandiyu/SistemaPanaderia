@@ -105,18 +105,23 @@
                 </div>
 
                 <div class="card-body">
-                    @* <p>Cantidad registros: @ProductosMasVendidos.Count</p> *@
-                    <ApexChart TItem="ProductoMasVendidoDto"
-                               Title="Ventas por Producto">
-
-                        <ApexPointSeries TItem="ProductoMasVendidoDto"
-                                         Items="ProductosMasVendidos"
-                                         Name="Ventas"
-                                         XValue="x => x.Nombre"
-                                         YValue="x => x.CantidadVendida" />
-
-                    </ApexChart>
-
+                    @if (ProductosMasVendidos != null && ProductosMasVendidos.Any()) {
+                        <ApexChart TItem="ProductoMasVendidoDto" Title="Productos mas vendidos">
+                            <ApexPointSeries TItem="ProductoMasVendidoDto"
+                                             Items="ProductosMasVendidos"
+                                             Name="Productos"
+                                             SeriesType="SeriesType.Pie"
+                                             XValue="x => x.Nombre"
+                                             YValue="x => x.CantidadVendida" />
+                        </ApexChart>
+                    } else {
+                        <div class="text-center p-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando datos...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Cargando gráfico...</p>
+                        </div>
+                    }
                 </div>
 
             </div>

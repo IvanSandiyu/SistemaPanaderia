@@ -9,6 +9,7 @@ namespace Panaderia.Application.DTOs
 {
     public class MetodoPagoDTO
     {
-        public MetodoDePago MetodoDePago {  get; set; }
+        public string MetodoDePago {  get; set; }
+        public int CantidadVentas { get; set; }
     }
 }

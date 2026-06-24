@@ -17,5 +17,11 @@ namespace Panaderia.Blazor.Services
             var response = await _http.GetFromJsonAsync<List<VentaDiariaDto>>($"api/dashboard/ventapordia") ?? new();
             return response;
         }
+
+        public async Task<List<MetodoPagoDto>> MetodoPago()
+        {
+            var response = await _http.GetFromJsonAsync<List<MetodoPagoDto>>("api/dashboard/metodos-pagos") ?? new();
+            return response;
+        }
     }
 }

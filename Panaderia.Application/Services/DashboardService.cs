@@ -25,11 +25,10 @@ namespace Panaderia.Application.Services
 
         public async Task<List<MetodoPagoDTO>> MetodoDePago()
         {
-            var metodos = await _context.Ventas.Select(x => new MetodoPagoDTO {
-                MetodoDePago = x.MetodoPago
+            return await _context.Ventas.GroupBy(x => x.MetodoPago).Select(g => new MetodoPagoDTO {
+                MetodoDePago = g.Key.ToString(),
+                CantidadVentas = g.Count()
             }).ToListAsync();
-
-            return metodos;
         }
 
         public Task<DashboardDto> ObtenerDashboard()
@@ -75,7 +74,7 @@ namespace Panaderia.Application.Services
         
             return ventasPorDia;
         }
-
+        
         
     }
 }
