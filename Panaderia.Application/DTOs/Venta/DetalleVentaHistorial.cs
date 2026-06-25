@@ -12,7 +12,7 @@ namespace Panaderia.Application.DTOs.Ventas
 
         public string Producto { get; set; } 
 
-        public int Cantidad { get; set; }
+        public decimal Cantidad { get; set; }
 
         public decimal PrecioUnitario { get; set; }
 

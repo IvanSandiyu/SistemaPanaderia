@@ -10,6 +10,7 @@ namespace Panaderia.Application.DTOs.Producto
         string Nombre,
         decimal PrecioCompra,
         decimal PrecioVenta,
-        int StockActual,
-        bool Activo);
+        decimal StockActual,
+        bool Activo,
+        decimal? PorcentajeGanancia);
 }

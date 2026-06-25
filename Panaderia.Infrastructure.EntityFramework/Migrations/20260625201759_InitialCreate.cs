@@ -22,7 +22,9 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     CategoriaId = table.Column<int>(type: "int", nullable: false),
                     PrecioCompra = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PrecioVenta = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    StockActual = table.Column<int>(type: "int", nullable: false),
+                    StockActual = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PorcentajeGanancia = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    TipoVenta = table.Column<int>(type: "int", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
@@ -37,7 +39,9 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MetodoPago = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,7 +57,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProductoId = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Observaciones = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReferenciaId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -76,7 +80,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VentaId = table.Column<int>(type: "int", nullable: false),
                     ProductoId = table.Column<int>(type: "int", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PrecioUnitario = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Subtotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },

@@ -6,6 +6,6 @@
 
         public string Nombre { get; set; } = string.Empty;
 
-        public int CantidadVendida { get; set; }
+        public decimal CantidadVendida { get; set; }
     }
 }

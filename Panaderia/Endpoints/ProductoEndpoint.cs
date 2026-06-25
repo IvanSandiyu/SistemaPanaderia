@@ -40,10 +40,18 @@ namespace Panaderia.WebApi.Endpoints
                 {
                     Nombre = dto.Nombre,
                     PrecioCompra = dto.PrecioCompra,
-                    PrecioVenta = dto.PrecioVenta,
+                    //PrecioVenta = dto.PrecioVenta,
                     StockActual = dto.StockActual
+                    
                 };
-                if((await _service.CrearAsync(producto))){
+                if (dto.PorcentajeGanancia > 0) {
+                    producto.PrecioVenta = dto.PrecioCompra * (1 + dto.PorcentajeGanancia.Value / 100);
+                    producto.PorcentajeGanancia = dto.PorcentajeGanancia;
+                } else {
+                    producto.PorcentajeGanancia = 0;
+                }
+
+                if ((await _service.CrearAsync(producto))) {
                     return Results.Created($"/api/stock/productos/{producto.Id}", producto);
                 }
                 return Results.Problem("Hubo un problema al crear");

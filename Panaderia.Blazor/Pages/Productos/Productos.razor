@@ -55,8 +55,10 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Producto</th>
+                                <th>Precio Compra</th>
                                 <th>Precio Venta</th>
                                 <th>Stock</th>
+                                <th>Porcentaje Ganancias</th>
                                 <th width="120">Acciones</th>
                             </tr>
 
@@ -72,7 +74,11 @@
                                     </td>
 
                                     <td>
-                                        <strong>@producto.Nombre</strong>
+                                         @producto.Nombre
+                                    </td>
+
+                                    <td>
+                                        $ @producto.PrecioCompra
                                     </td>
 
                                     <td>
@@ -95,6 +101,10 @@
                                             </span>
                                         }
 
+                                    </td>
+
+                                    <td>
+                                         @producto.PorcentajeGanancia %
                                     </td>
 
                                     <td>

@@ -45,7 +45,9 @@
                             <th>Producto</th>
                             <th>Precio</th>
                             <th>Stock</th>
-                            <th></th>
+                            <th>Unidad / Kg</th>
+                            <th>Monto</th>
+                            
                         </tr>
                     </thead>
 
@@ -60,6 +62,8 @@
 
                                 <td>
                                     $ @producto.PrecioVenta
+                                    <br />
+                                    <small class="text-muted">por Kg</small>
                                 </td>
 
                                 <td>
@@ -79,28 +83,55 @@
                                     }
 
                                 </td>
-
+                            
                                 <td>
 
-                                    <button class="btn btn-success btn-sm me-1"
-                                            disabled="@(!PuedeAgregar(producto))"
-                                            @onclick="() => AgregarAlCarrito(producto)">
+                                    <div class="btn-group btn-group-sm">
 
-                                        <i class="bi bi-plus-lg"></i>
+                                        <button class="btn btn-success"
+                                                @onclick="() => AgregarAlCarrito(producto)">
+                                            +1
+                                        </button>
 
-                                    </button>
+                                        <button class="btn btn-outline-primary"
+                                                @onclick="() => AgregarPorKg(producto, 0.25m)">
+                                            ¼ Kg
+                                        </button>
 
-                                    <button class="btn btn-danger btn-sm"
-                                            @onclick="() => EliminarDelCarrito(producto.Id)">
+                                        <button class="btn btn-outline-primary"
+                                                @onclick="() => AgregarPorKg(producto, 0.50m)">
+                                            ½ Kg
+                                        </button>
 
-                                        <i class="bi bi-dash-lg"></i>
+                                        <button class="btn btn-outline-primary"
+                                                @onclick="() => AgregarPorKg(producto, 1m)">
+                                            1 Kg
+                                        </button>
 
-                                    </button>
+                                    </div>
 
                                 </td>
 
-                            </tr>
-                        }
+                                <td style="width:170px">
+
+                                    <input type="number"
+                                           class="form-control form-control-sm"
+                                           value="@Montos.GetValueOrDefault(producto.Id)"
+                                           @oninput="e => Montos[producto.Id] = decimal.TryParse(e.Value?.ToString(), out var v) ? v : 0" />
+
+                                    <button class="btn btn-warning btn-sm mt-1 w-100"
+                                            @onclick="() => AgregarPorMonto(producto,
+                                            Montos.GetValueOrDefault(producto.Id))">
+
+                                    <i class="bi bi-cash"></i>
+                                    Agregar
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+                                                }
 
                     </tbody>
 
@@ -185,13 +216,20 @@
 
                     </div>
 
-                    <button class="btn btn-success btn-lg w-100 mt-3"
-                            @onclick="AbrirModalPago">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-                        <i class="bi bi-cash-stack me-2"></i>
-                        Cobrar
+                        <h5 class="mb-0">
+                            <i class="bi bi-cart-fill me-2"></i>
+                            Carrito
+                        </h5>
 
-                    </button>
+                        <button class="btn btn-sm btn-light"
+                                @onclick="LimpiarCarrito">
+
+                            <i class="bi bi-trash"></i>
+                        </button>
+
+                    </div>
                 }
 
             </div>
@@ -273,7 +311,7 @@
 </div>
 
 @code {
-
+    private Dictionary<int, decimal> Montos = new();
     private List<ProductoDto> Productos = new();
 
     private List<CarritoItemDto> Carrito = new();
@@ -282,13 +320,16 @@
     private string MetodoPago = "Efectivo";
 
     private string Observaciones = "";
+    
 
-    private decimal Total =>
-        Carrito.Sum(x => x.Cantidad * x.PrecioVenta);
+    private decimal Total =>Carrito.Sum(x => x.Cantidad * x.PrecioVenta);
 
     protected override async Task OnInitializedAsync()
     {
         Productos = await ProductoService.ObtenerTodos();
+        foreach (var producto in Productos) {
+            Montos[producto.Id] = 0;
+        }
     }
 
     private void AgregarAlCarrito(ProductoDto producto)
@@ -307,6 +348,46 @@
             item.Cantidad++;
         }
     }
+
+    private void AgregarPorMonto(ProductoDto producto, decimal montoIngresado)
+    {
+        if (montoIngresado <= 0)
+            return;
+
+        decimal cantidadKg = montoIngresado / producto.PrecioVenta;
+
+        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id);
+
+        if (item is null) {
+            Carrito.Add(new CarritoItemDto {
+                Id = producto.Id,
+                Nombre = producto.Nombre,
+                Cantidad = cantidadKg,
+                PrecioVenta = producto.PrecioVenta
+            });
+        } else {
+            item.Cantidad += cantidadKg;
+        }
+
+        Montos[producto.Id] = 0;
+    }
+
+    private void AgregarPorKg(ProductoDto producto, decimal kilos)
+    {
+        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id);
+
+        if (item is null) {
+            Carrito.Add(new CarritoItemDto {
+                Id = producto.Id,
+                Nombre = producto.Nombre,
+                Cantidad = kilos,
+                PrecioVenta = producto.PrecioVenta
+            });
+        } else {
+            item.Cantidad += kilos;
+        }
+    }
+
     private void EliminarDelCarrito(int id)
     {
         var item = Carrito.FirstOrDefault(x => x.Id == id);
@@ -347,6 +428,12 @@
 
         return item.Cantidad < producto.StockActual;
     }
+
+    private void LimpiarCarrito()
+    {
+        Carrito.Clear();
+    }
+
 
     private void AbrirModalPago()
     {

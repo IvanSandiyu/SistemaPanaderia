@@ -80,6 +80,7 @@ namespace Panaderia.Application.Services
                         Cantidad = detalle.Cantidad,
                         PrecioUnitario = p.PrecioVenta,
                         Subtotal = p.PrecioVenta * detalle.Cantidad
+                        
                     });
                     
                     await _context.Ventas.AddAsync(venta);

@@ -73,7 +73,19 @@
                                     </label>
 
                                     <InputNumber class="form-control"
-                                                 @bind-Value="Producto.PrecioVenta" />
+                                                 @bind-Value="Producto.PrecioVenta"
+                                                 disabled="@(Producto.PorcentajeGanancia > 0)" />
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label class="form-label">
+                                        Porcentaje Ganancia
+                                    </label>
+
+                                    <InputNumber class="form-control"
+                                                 @bind-Value="Producto.PorcentajeGanancia" />
 
                                 </div>
 
@@ -86,6 +98,11 @@
                                     <InputNumber class="form-control"
                                                  @bind-Value="Producto.StockActual" />
 
+                                </div>
+
+                                <div class="alert alert-info">
+                                    Precio sugerido:
+                                    <strong>$ @PrecioVentaCalculado</strong>
                                 </div>
 
                             </div>
@@ -132,6 +149,7 @@
     public int Id { get; set; }
 
     public ProductoDto Producto = new();
+    private decimal PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra * (1 + Producto.PorcentajeGanancia / 100m) : Producto.PrecioVenta;
 
     protected override async Task OnInitializedAsync()
     {

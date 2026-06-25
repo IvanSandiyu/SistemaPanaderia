@@ -9,7 +9,7 @@ namespace Panaderia.Application.DTOs.Ventas
     public class ProductoMasVendidoDto
     {
         public string Nombre { get; set; }
-        public int CantidadVendida { get; set; }
+        public decimal CantidadVendida { get; set; }
         public decimal TotalFacturado { get; set; }
     }
 }

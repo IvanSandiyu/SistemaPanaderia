@@ -18,6 +18,9 @@ namespace Panaderia.Infrastructure.EntityFramework.Configurations
 
             builder.Property(p => p.PrecioVenta)
                    .HasPrecision(18, 2); // Vital para dinero: 18 dígitos total, 2 decimales
+
+            builder.Property(p => p.PorcentajeGanancia)
+                .HasPrecision(18, 2);
             
             builder.Property(x => x.Activo);
         }

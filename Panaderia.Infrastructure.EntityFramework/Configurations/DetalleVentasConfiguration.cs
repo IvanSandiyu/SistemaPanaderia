@@ -18,7 +18,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Cantidad)
-                .IsRequired();
+                .HasColumnType("decimal(18,2)");
 
             builder.Property(x => x.PrecioUnitario)
                 .HasColumnType("decimal(18,2)");

@@ -22,20 +22,31 @@ namespace Panaderia.Application.Services
 
         public async Task<bool> ActualizarAsync(int id, ProductoDTO dto)
         {
-            if (dto == null)
+            if (dto == null  )
                 return false;
-
+            
             var p = await _context.Productos.FindAsync(id);
             if (p is null)
                 return false;
 
             p.Nombre = dto.Nombre;
             p.PrecioCompra = dto.PrecioCompra;
-            p.PrecioVenta = dto.PrecioVenta;
             p.StockActual = dto.StockActual;
             p.Activo = dto.Activo;
+            
+            if (dto.PorcentajeGanancia > 0) {
+                p.PrecioVenta =
+                    dto.PrecioCompra *
+                    (1 + dto.PorcentajeGanancia.Value / 100);
 
-            await _context.SaveChangesAsync();
+                p.PorcentajeGanancia = dto.PorcentajeGanancia;
+            } else {
+                p.PrecioVenta = dto.PrecioVenta;
+                p.PorcentajeGanancia = 0;
+            }
+
+
+                await _context.SaveChangesAsync();
             return true;
 
 

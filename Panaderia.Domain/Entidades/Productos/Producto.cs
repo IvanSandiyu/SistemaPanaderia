@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Panaderia.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,11 @@ namespace Panaderia.Domain.Entidades.Productos
         public int CategoriaId { get; set; }
         public decimal PrecioCompra { get; set; }
         public decimal PrecioVenta { get; set; }
-        public int StockActual { get; set; } // Actúa como caché rápido de lectura
+        public decimal StockActual { get; set; } // Actúa como caché rápido de lectura
+
+        public decimal? PorcentajeGanancia { get; set; }
+        public TipoVenta TipoVenta { get; set; }
+
 
         public bool? Activo { get; set; } = true;
 

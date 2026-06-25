@@ -10,7 +10,7 @@ namespace Panaderia.Application.DTOs.Ventas
     public record DetalleVentaDTO 
     {
         public int ProductoID { get; set; }
-        public int Cantidad {  get; set; }
+        public decimal Cantidad {  get; set; }
     }
     
         
