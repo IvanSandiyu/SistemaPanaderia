@@ -1,8 +1,7 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using Panaderia.Application.DTOs.Ventas;
+﻿using Microsoft.AspNetCore.Mvc;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades;
+using Panaderia.Shared.DTOs.Ventas;
 
 namespace Panaderia.WebApi.Endpoints
 {

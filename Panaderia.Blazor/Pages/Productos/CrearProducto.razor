@@ -1,7 +1,7 @@
 ﻿@page "/productos/nuevo"
 
-@using Panaderia.Blazor.Models
-@using Panaderia.Blazor.Models.Productos
+
+@using Panaderia.Shared.DTOs.Productos
 @using Panaderia.Blazor.Services
 
 @inject ProductoService ProductoService
@@ -61,10 +61,10 @@
 
 @code {
 
-    private ProductoDto Producto = new();
+    private ProductoDTO Producto = new();
     private string Mensaje { get; set; }
     private bool MostrarMensaje { get; set; } = false;
-    private decimal PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra *(1 + Producto.PorcentajeGanancia / 100m): Producto.PrecioVenta;
+    private decimal? PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra *(1 + Producto.PorcentajeGanancia / 100m): Producto.PrecioVenta;
 
     private async Task Guardar()
     {

@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Panaderia.Application\Panaderia.Application.csproj" />
     <ProjectReference Include="..\Panaderia.Infrastructure.EntityFramework\Panaderia.Infrastructure.EntityFramework.csproj" />
+    <ProjectReference Include="..\Panaderia.Shared\Panaderia.Shared.csproj" />
   </ItemGroup>
 
 </Project>

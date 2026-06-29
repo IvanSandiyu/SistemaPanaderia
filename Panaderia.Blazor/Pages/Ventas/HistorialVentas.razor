@@ -1,6 +1,7 @@
 ﻿@page "/historial-ventas"
+
 @using Panaderia.Blazor.Models
-@using Panaderia.Blazor.Models.Ventas
+@using Panaderia.Shared.DTOs.Ventas
 @using Panaderia.Blazor.Services
 
 @inject VentaService VentaService
@@ -64,6 +65,7 @@
                                 <th>#</th>
                                 <th>Fecha</th>
                                 <th>Hora</th>
+                                <th>Metodo pago</th>
                                 <th>Total</th>
                                 <th></th>
                             </tr>
@@ -89,6 +91,9 @@
                                             @v.Fecha.ToShortTimeString()
                                         </span>
 
+                                    </td>
+                                    <td>
+                                        @v.MetodoPago.ToString()
                                     </td>
 
                                     <td>
@@ -180,7 +185,7 @@
                                     </td>
 
                                     <td>
-                                        $ @(item.Cantidad* item.PrecioVenta)
+                                        $ @((item.Cantidad* item.PrecioVenta)?.ToString("N2"))
                                     </td>
 
                                 </tr>
@@ -237,7 +242,7 @@
 @code {
     private List<VentaHistorialDto>? ventas = new();
     private List<CarritoItemDto> Item = new();
-    public decimal Subtotal { get; set; }
+    public decimal? Subtotal { get; set; }
     //Mostrar detalleventahistorialdto
 
 

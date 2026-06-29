@@ -1,4 +1,4 @@
-﻿using Panaderia.Domain.Enums;
+﻿using Panaderia.Domain.Entidades.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace Panaderia.Domain.Entidades.Ventas
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
 
-        public decimal Total { get; set; }
+        public decimal? Total { get; set; }
 
         public ICollection<DetalleVenta> Detalles { get; set; } = new List<DetalleVenta>();
 

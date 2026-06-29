@@ -1,6 +1,6 @@
 ﻿@page "/productos/editar/{Id:int}"
-@using Panaderia.Blazor.Models
-@using Panaderia.Blazor.Models.Productos
+
+@using Panaderia.Shared.DTOs.Productos
 @using Panaderia.Blazor.Services
 
 @inject ProductoService ProductoService
@@ -55,10 +55,18 @@
 
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <!-- ===================== POR KG ===================== -->
+
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2 mb-3">
+                                        Venta por Kilogramo
+                                    </h5>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
 
                                     <label class="form-label">
-                                        Precio Compra
+                                        Precio Compra Kg
                                     </label>
 
                                     <InputNumber class="form-control"
@@ -66,10 +74,21 @@
 
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
 
                                     <label class="form-label">
-                                        Precio Venta
+                                        % Ganancia Kg
+                                    </label>
+
+                                    <InputNumber class="form-control"
+                                                 @bind-Value="Producto.PorcentajeGanancia" />
+
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+
+                                    <label class="form-label">
+                                        Precio Venta Kg
                                     </label>
 
                                     <InputNumber class="form-control"
@@ -78,16 +97,67 @@
 
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-12 mb-4">
+
+                                    <div class="alert alert-info">
+                                        Precio sugerido Kg:
+                                        <strong>$ @PrecioVentaCalculado</strong>
+                                    </div>
+
+                                </div>
+
+                                <!-- ===================== POR UNIDAD ===================== -->
+
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2 mb-3">
+                                        Venta por Unidad
+                                    </h5>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
 
                                     <label class="form-label">
-                                        Porcentaje Ganancia
+                                        Precio Compra Unidad
                                     </label>
 
                                     <InputNumber class="form-control"
-                                                 @bind-Value="Producto.PorcentajeGanancia" />
+                                                 @bind-Value="Producto.PrecioCompraUnidad" />
 
                                 </div>
+
+                                <div class="col-md-4 mb-3">
+
+                                    <label class="form-label">
+                                        % Ganancia Unidad
+                                    </label>
+
+                                    <InputNumber class="form-control"
+                                                 @bind-Value="Producto.PorcentajeGananciaUnidad" />
+
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+
+                                    <label class="form-label">
+                                        Precio Venta Unidad
+                                    </label>
+
+                                    <InputNumber class="form-control"
+                                                 @bind-Value="Producto.PrecioVentaUnidad"
+                                                 disabled="@(Producto.PorcentajeGananciaUnidad > 0)" />
+
+                                </div>
+
+                                <div class="col-12 mb-4">
+
+                                    <div class="alert alert-info">
+                                        Precio sugerido Unidad:
+                                        <strong>$ @PrecioVentaUnidadCalculado</strong>
+                                    </div>
+
+                                </div>
+
+                                <!-- ===================== STOCK ===================== -->
 
                                 <div class="col-md-6 mb-4">
 
@@ -98,11 +168,6 @@
                                     <InputNumber class="form-control"
                                                  @bind-Value="Producto.StockActual" />
 
-                                </div>
-
-                                <div class="alert alert-info">
-                                    Precio sugerido:
-                                    <strong>$ @PrecioVentaCalculado</strong>
                                 </div>
 
                             </div>
@@ -148,9 +213,9 @@
     [Parameter]
     public int Id { get; set; }
 
-    public ProductoDto Producto = new();
-    private decimal PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra * (1 + Producto.PorcentajeGanancia / 100m) : Producto.PrecioVenta;
-
+    public ProductoDTO Producto = new();
+    private decimal? PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra * (1 + Producto.PorcentajeGanancia / 100m) : Producto.PrecioVenta;
+    private decimal? PrecioVentaUnidadCalculado => Producto.PorcentajeGananciaUnidad > 0 ? Producto.PrecioCompraUnidad * (1 + Producto.PorcentajeGananciaUnidad.Value / 100): Producto.PrecioVentaUnidad;
     protected override async Task OnInitializedAsync()
     {
         Producto = await ProductoService.ObtenerPorId(Id);

@@ -1,4 +1,4 @@
-﻿using Panaderia.Blazor.Models.Productos;
+﻿using Panaderia.Shared.DTOs.Productos;
 using System.Net.Http.Json;
 
 namespace Panaderia.Blazor.Services
@@ -12,18 +12,18 @@ namespace Panaderia.Blazor.Services
             _http = http;
         }
 
-        public async Task<List<ProductoDto>> ObtenerTodos()
+        public async Task<List<ProductoDTO>> ObtenerTodos()
         {
-            return await _http.GetFromJsonAsync<List<ProductoDto>>(
+            return await _http.GetFromJsonAsync<List<ProductoDTO>>(
                 "api/stock/productos")
                 ?? new();
         }
 
-        public async Task<ProductoDto> ObtenerPorId(int id)
+        public async Task<ProductoDTO> ObtenerPorId(int id)
         {
-            return await _http.GetFromJsonAsync<ProductoDto>($"api/stock/{id}") ?? new();
+            return await _http.GetFromJsonAsync<ProductoDTO>($"api/stock/{id}") ?? new();
         }
-        public async Task<bool> Actualizar(int id, ProductoDto dto)
+        public async Task<bool> Actualizar(int id, ProductoDTO dto)
         {
             var response = await _http.PostAsJsonAsync(
                 $"api/stock/modificarproducto/{id}",
@@ -32,7 +32,7 @@ namespace Panaderia.Blazor.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> CrearProducto(ProductoDto dto)
+        public async Task<bool> CrearProducto(ProductoDTO dto)
         {
             var response = await _http.PostAsJsonAsync(
                 "api/stock/crearproductos",

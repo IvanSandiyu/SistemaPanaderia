@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Panaderia.Domain.Entidades.Enums
+namespace Panaderia.Shared.Enums
 {
     public enum TipoMovimiento
     {
@@ -13,4 +13,5 @@ namespace Panaderia.Domain.Entidades.Enums
         AjustePositivo = 3,  // Ej: Se encontró stock que no estaba registrado
         AjusteNegativo = 4   // Ej: Producto vencido o dañado
     }
+
 }

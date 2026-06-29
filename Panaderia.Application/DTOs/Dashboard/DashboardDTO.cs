@@ -1,11 +1,12 @@
-﻿using Panaderia.Application.DTOs.Venta;
-using Panaderia.Application.DTOs.Ventas;
+﻿using Panaderia.Shared.DTOs;
 using Panaderia.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Panaderia.Shared.Ventas;
+using Panaderia.Shared.DTOs.Productos;
 
 namespace Panaderia.Application.DTOs.Dashboard
 {
@@ -23,6 +24,6 @@ namespace Panaderia.Application.DTOs.Dashboard
 
         public List<ProductoMasVendidoDto> ProductosMasVendidos { get; set; }
 
-        public List<MetodoPagoDTO> MetodosPago { get; set; }
+        public List<MetodoPagoDto> MetodosPago { get; set; }
     }
 }

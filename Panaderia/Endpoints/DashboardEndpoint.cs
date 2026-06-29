@@ -1,8 +1,8 @@
 ﻿
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Panaderia.Application.DTOs.Venta;
-using Panaderia.Application.DTOs.Ventas;
 using Panaderia.Application.Interfaces;
+using Panaderia.Shared.DTOs.Productos;
+using Panaderia.Shared.Ventas;
 using System.ComponentModel;
 
 namespace Panaderia.WebApi.Endpoints
@@ -36,7 +36,7 @@ namespace Panaderia.WebApi.Endpoints
             return lista.ToList();
         }
 
-        public async Task<List<MetodoPagoDTO>> MetodoPago(IDashboardService service)
+        public async Task<List<MetodoPagoDto>> MetodoPago(IDashboardService service)
         {
             var metodos = await service.MetodoDePago();
             return metodos;

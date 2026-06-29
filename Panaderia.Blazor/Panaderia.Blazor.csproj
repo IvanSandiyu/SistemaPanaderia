@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Productos\ProductoDto.cs" />
+    <Compile Remove="Models\Ventas\DetalleVentaDto.cs" />
+    <Compile Remove="Models\Ventas\DetalleVentaHistorialDto.cs" />
+    <Compile Remove="Models\Ventas\MetodoPagoDto.cs" />
+    <Compile Remove="Models\Ventas\VentaDiariaDto.cs" />
+    <Compile Remove="Models\Ventas\VentaDto.cs" />
+    <Compile Remove="Models\Ventas\VentaHistorialDto.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.17" PrivateAssets="all" />
@@ -14,10 +24,12 @@
 
   <ItemGroup>
     <Folder Include="Components\" />
+    <Folder Include="Models\Ventas\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Panaderia.Application\Panaderia.Application.csproj" />
+    <ProjectReference Include="..\Panaderia.Shared\Panaderia.Shared.csproj" />
   </ItemGroup>
 
 </Project>

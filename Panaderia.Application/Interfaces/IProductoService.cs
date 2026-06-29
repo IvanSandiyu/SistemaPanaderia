@@ -1,5 +1,5 @@
-﻿using Panaderia.Application.DTOs.Producto;
-using Panaderia.Domain.Entidades.Productos;
+﻿using Panaderia.Domain.Entidades.Productos;
+using Panaderia.Shared.DTOs.Productos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace Panaderia.Application.Interfaces
 
         Task<List<Producto>> ObtenerTodosAsync();
 
-        Task<bool> CrearAsync(Producto dto);
+        Task<bool> CrearAsync(ProductoDTO dto);
 
         Task<bool> ActualizarAsync(int id,ProductoDTO dto);
 

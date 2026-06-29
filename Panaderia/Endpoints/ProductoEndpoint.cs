@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Panaderia.Application.DTOs.Producto;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades.Productos;
+using Panaderia.Shared.DTOs.Productos;
 using System.ComponentModel;
 
 namespace Panaderia.WebApi.Endpoints
@@ -33,31 +33,16 @@ namespace Panaderia.WebApi.Endpoints
                .WithOpenApi();
         }
         
-        public async Task<IResult> CrearProducto([FromBody] ProductoDTO dto, IProductoService _service)
+        public async Task<bool> CrearProducto([FromBody] ProductoDTO dto, IProductoService _service)
         {
             try {
-                var producto = new Producto
-                {
-                    Nombre = dto.Nombre,
-                    PrecioCompra = dto.PrecioCompra,
-                    //PrecioVenta = dto.PrecioVenta,
-                    StockActual = dto.StockActual
-                    
-                };
-                if (dto.PorcentajeGanancia > 0) {
-                    producto.PrecioVenta = dto.PrecioCompra * (1 + dto.PorcentajeGanancia.Value / 100);
-                    producto.PorcentajeGanancia = dto.PorcentajeGanancia;
-                } else {
-                    producto.PorcentajeGanancia = 0;
+                if ((await _service.CrearAsync(dto))) {
+                    return true;
                 }
-
-                if ((await _service.CrearAsync(producto))) {
-                    return Results.Created($"/api/stock/productos/{producto.Id}", producto);
-                }
-                return Results.Problem("Hubo un problema al crear");
+                return false;
 
             } catch (Exception ex) {
-                return Results.Problem(ex.Message);
+                return false;
             }
 
         }

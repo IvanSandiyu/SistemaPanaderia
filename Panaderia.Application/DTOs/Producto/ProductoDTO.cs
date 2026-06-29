@@ -8,9 +8,12 @@ namespace Panaderia.Application.DTOs.Producto
 {
     public record ProductoDTO (
         string Nombre,
-        decimal PrecioCompra,
-        decimal PrecioVenta,
+        decimal? PrecioCompra,
+        decimal? PrecioCompraUnidad,
+        decimal? PrecioVenta,
+        decimal? PrecioVentaUnidad,
         decimal StockActual,
         bool Activo,
-        decimal? PorcentajeGanancia);
+        decimal? PorcentajeGanancia,
+        decimal? PorcentajeGananciaUnidad);
 }

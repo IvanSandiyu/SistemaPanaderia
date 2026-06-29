@@ -1,6 +1,5 @@
 ﻿@page "/productos"
-@using Panaderia.Blazor.Models
-@using Panaderia.Blazor.Models.Productos
+@using Panaderia.Shared.DTOs.Productos
 @using Panaderia.Blazor.Services
 
 @inject ProductoService ProductoService
@@ -57,8 +56,9 @@
                                 <th>Producto</th>
                                 <th>Precio Compra</th>
                                 <th>Precio Venta</th>
+                                <th>Precio Venta Unidad</th>
                                 <th>Stock</th>
-                                <th>Porcentaje Ganancias</th>
+                                @* <th>Porcentaje Ganancias</th> *@
                                 <th width="120">Acciones</th>
                             </tr>
 
@@ -84,6 +84,9 @@
                                     <td>
                                         $ @producto.PrecioVenta
                                     </td>
+                                    <td>
+                                        $ @producto.PrecioVentaUnidad
+                                    </td>
 
                                     <td>
 
@@ -103,9 +106,9 @@
 
                                     </td>
 
-                                    <td>
+                                   @*  <td>
                                          @producto.PorcentajeGanancia %
-                                    </td>
+                                    </td> *@
 
                                     <td>
 
@@ -137,7 +140,7 @@
 
 @code {
 
-    private List<ProductoDto>? productos;
+    private List<ProductoDTO>? productos;
 
     protected override async Task OnInitializedAsync()
     {

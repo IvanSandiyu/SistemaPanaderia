@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Panaderia.Application.DTOs.Producto;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades.Productos;
+using Panaderia.Shared.DTOs.Productos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,20 +44,53 @@ namespace Panaderia.Application.Services
                 p.PrecioVenta = dto.PrecioVenta;
                 p.PorcentajeGanancia = 0;
             }
+            if (dto.PorcentajeGananciaUnidad > 0) {
+                p.PrecioVentaUnidad =
+                    dto.PrecioCompraUnidad *
+                    (1 + dto.PorcentajeGananciaUnidad.Value / 100);
+
+                p.PorcentajeGananciaUnidad = dto.PorcentajeGananciaUnidad;
+            } else {
+                p.PrecioVentaUnidad = dto.PrecioVentaUnidad;
+                p.PorcentajeGananciaUnidad = 0;
+            }
 
 
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return true;
 
 
         }
 
-        public async Task<bool> CrearAsync(Producto dto)
+        public async Task<bool> CrearAsync(ProductoDTO dto)
         {
             if (dto is null)
                 throw new ArgumentNullException(nameof(dto));
-           
-            await _context.Productos.AddAsync(dto);
+
+            var producto = new Producto {
+                Nombre = dto.Nombre,
+                StockActual = dto.StockActual,
+                Activo = dto.Activo,
+                PrecioCompra = dto.PrecioCompra,
+                PrecioCompraUnidad = dto.PrecioCompraUnidad
+            };
+            if (dto.PorcentajeGanancia > 0) {
+                producto.PorcentajeGanancia = dto.PorcentajeGanancia;
+
+                producto.PrecioVenta = dto.PrecioCompra * (1 + dto.PorcentajeGanancia.Value / 100);
+            } else {
+                producto.PrecioVenta = dto.PrecioVenta;
+            }
+            if (dto.PorcentajeGananciaUnidad > 0) {
+                producto.PorcentajeGananciaUnidad = dto.PorcentajeGananciaUnidad;
+
+                producto.PrecioVentaUnidad = dto.PrecioCompraUnidad * (1 + dto.PorcentajeGananciaUnidad.Value / 100);
+            } else {
+                producto.PrecioVentaUnidad = dto.PrecioVentaUnidad;
+            }
+
+
+            await _context.Productos.AddAsync(producto);
             if (await _context.SaveChangesAsync() > 0)
                 return true;
             return false;

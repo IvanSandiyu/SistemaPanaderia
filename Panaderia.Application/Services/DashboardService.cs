@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Panaderia.Application.DTOs.Dashboard;
-using Panaderia.Application.DTOs.Venta;
-using Panaderia.Application.DTOs.Ventas;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades;
+using Panaderia.Shared.DTOs.Productos;
+using Panaderia.Shared.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +25,9 @@ namespace Panaderia.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<List<MetodoPagoDTO>> MetodoDePago()
+        public async Task<List<MetodoPagoDto>> MetodoDePago()
         {
-            return await _context.Ventas.GroupBy(x => x.MetodoPago).Select(g => new MetodoPagoDTO {
+            return await _context.Ventas.GroupBy(x => x.MetodoPago).Select(g => new MetodoPagoDto {
                 MetodoDePago = g.Key.ToString(),
                 CantidadVentas = g.Count()
             }).ToListAsync();

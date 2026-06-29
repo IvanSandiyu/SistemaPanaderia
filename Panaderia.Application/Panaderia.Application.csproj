@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\Producto\**" />
+    <Compile Remove="DTOs\Venta\**" />
+    <EmbeddedResource Remove="DTOs\Producto\**" />
+    <EmbeddedResource Remove="DTOs\Venta\**" />
+    <None Remove="DTOs\Producto\**" />
+    <None Remove="DTOs\Venta\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
@@ -14,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Panaderia.Domain\Panaderia.Domain.csproj" />
+    <ProjectReference Include="..\Panaderia.Shared\Panaderia.Shared.csproj" />
   </ItemGroup>
 
 </Project>

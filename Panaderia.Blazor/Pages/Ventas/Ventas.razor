@@ -1,8 +1,9 @@
 ﻿@page "/ventas"
 @using Panaderia.Blazor.Models
-@using Panaderia.Blazor.Models.Productos
-@using Panaderia.Blazor.Models.Ventas
+@using Panaderia.Shared.DTOs.Productos
+@using Panaderia.Shared.DTOs.Ventas
 @using Panaderia.Blazor.Services
+@using Panaderia.Shared.Enums
 
 @inject ProductoService ProductoService
 @inject VentaService VentaService
@@ -61,9 +62,20 @@
                                 </td>
 
                                 <td>
-                                    $ @producto.PrecioVenta
+                                   @*  $ @producto.PrecioVenta
                                     <br />
-                                    <small class="text-muted">por Kg</small>
+                                    <small class="text-muted">por Kg</small> *@
+                                    @if (producto.PrecioVentaUnidad.HasValue) {
+                                        <div>
+                                            <strong>Unidad:</strong> $@producto.PrecioVentaUnidad
+                                        </div>
+                                    }
+
+                                    @if (producto.PrecioVenta > 0) {
+                                        <div>
+                                            <strong>Kg:</strong> $@producto.PrecioVenta
+                                        </div>
+                                    }
                                 </td>
 
                                 <td>
@@ -85,8 +97,39 @@
                                 </td>
                             
                                 <td>
+                                    @if (producto.PrecioVentaUnidad.HasValue) {
+                                        <div class="mb-2">
 
-                                    <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-success btn-sm w-100"
+                                                    @onclick="() => AgregarAlCarrito(producto)">
+                                                +1 Unidad
+                                            </button>
+
+                                        </div>
+                                    }
+
+                                    @if (producto.PrecioVenta > 0 ) {
+                                        <div class="btn-group btn-group-sm">
+
+                                            <button class="btn btn-outline-primary"
+                                                    @onclick="() => AgregarPorKg(producto, 0.25m)">
+                                                ¼ Kg
+                                            </button>
+
+                                            <button class="btn btn-outline-primary"
+                                                    @onclick="() => AgregarPorKg(producto, 0.50m)">
+                                                ½ Kg
+                                            </button>
+
+                                            <button class="btn btn-outline-primary"
+                                                    @onclick="() => AgregarPorKg(producto, 1)">
+                                                1 Kg
+                                            </button>
+
+                                        </div>
+                                    }
+
+                                    @* <div class="btn-group btn-group-sm">
 
                                         <button class="btn btn-success"
                                                 @onclick="() => AgregarAlCarrito(producto)">
@@ -108,7 +151,7 @@
                                             1 Kg
                                         </button>
 
-                                    </div>
+                                    </div> *@
 
                                 </td>
 
@@ -192,7 +235,7 @@
                                     </td>
 
                                     <td>
-                                        $ @(item.Cantidad* item.PrecioVenta)
+                                        $ @((item.Cantidad * item.PrecioUnitario)?.ToString("N2"))
                                     </td>
 
                                 </tr>
@@ -227,6 +270,11 @@
                                 @onclick="LimpiarCarrito">
 
                             <i class="bi bi-trash"></i>
+                        </button>
+                        <button class="btn btn-sm btn-light"
+                                @onclick="AbrirModalPago">
+
+                            <i class="bi bi-currency-dollar"></i>
                         </button>
 
                     </div>
@@ -263,13 +311,10 @@
                             </label>
 
                             <InputSelect class="form-select"
-                                         @bind-Value="MetodoPago">
-
-                                <option>Efectivo</option>
-                                <option>Transferencia</option>
-                                <option>Fiado</option>
-                                <option>Regalo</option>
-
+                                         @bind-Value="MetodoPagoSeleccionado">
+                                @foreach (var item in Enum.GetValues<MetodoDePago>()) {
+                                    <option value="@item">@item</option>
+                                }
                             </InputSelect>
                         </div>
 
@@ -312,17 +357,14 @@
 
 @code {
     private Dictionary<int, decimal> Montos = new();
-    private List<ProductoDto> Productos = new();
+    private List<ProductoDTO> Productos = new();
 
     private List<CarritoItemDto> Carrito = new();
     private bool MostrarModalPago = false;
-
-    private string MetodoPago = "Efectivo";
-
-    private string Observaciones = "";
     
+    private string Observaciones = "";
 
-    private decimal Total =>Carrito.Sum(x => x.Cantidad * x.PrecioVenta);
+    private decimal? Total => Carrito.Sum(x => x.Subtotal);
 
     protected override async Task OnInitializedAsync()
     {
@@ -332,38 +374,43 @@
         }
     }
 
-    private void AgregarAlCarrito(ProductoDto producto)
+    private void AgregarAlCarrito(ProductoDTO producto)
     {
-        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id);
+        //var item = Carrito.FirstOrDefault(x => x.Id == producto.Id);
+        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id && x.TipoVenta == TipoVenta.Unidad);
 
         if (item is null) {
             Carrito.Add(new CarritoItemDto
             {
                 Id = producto.Id,
                 Nombre = producto.Nombre,
-                PrecioVenta = producto.PrecioVenta,
-                Cantidad = 1
+                PrecioUnitario = producto.PrecioVentaUnidad ?? 0,
+                //PrecioAplicado = producto.PrecioVentaUnidad.Value ,
+                Cantidad = 1,
+                TipoVenta = TipoVenta.Unidad
             });
+
         } else {
             item.Cantidad++;
         }
     }
 
-    private void AgregarPorMonto(ProductoDto producto, decimal montoIngresado)
+    private void AgregarPorMonto(ProductoDTO producto, decimal montoIngresado)
     {
         if (montoIngresado <= 0)
             return;
 
-        decimal cantidadKg = montoIngresado / producto.PrecioVenta;
+        decimal? cantidadKg = montoIngresado / producto.PrecioVenta;
 
-        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id);
+        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id && x.TipoVenta == TipoVenta.Monto);
 
         if (item is null) {
             Carrito.Add(new CarritoItemDto {
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 Cantidad = cantidadKg,
-                PrecioVenta = producto.PrecioVenta
+                PrecioAplicado = producto.PrecioVenta.Value,
+                TipoVenta = TipoVenta.Monto
             });
         } else {
             item.Cantidad += cantidadKg;
@@ -372,16 +419,17 @@
         Montos[producto.Id] = 0;
     }
 
-    private void AgregarPorKg(ProductoDto producto, decimal kilos)
+    private void AgregarPorKg(ProductoDTO producto, decimal kilos)
     {
-        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id);
+        var item = Carrito.FirstOrDefault(x => x.Id == producto.Id && x.TipoVenta == TipoVenta.Peso);
 
         if (item is null) {
             Carrito.Add(new CarritoItemDto {
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 Cantidad = kilos,
-                PrecioVenta = producto.PrecioVenta
+                PrecioAplicado =producto.PrecioVenta.Value,
+                TipoVenta = TipoVenta.Peso
             });
         } else {
             item.Cantidad += kilos;
@@ -396,18 +444,22 @@
             item.Cantidad--;
         }
     }
-
+    private MetodoDePago MetodoPagoSeleccionado = MetodoDePago.Efectivo;
     private async Task RealizarPago()
     {
+
         var venta = new VentaDto
         {
-            MetodoPago = MetodoPago,
+            MetodoPago = MetodoPagoSeleccionado,
             Observaciones = Observaciones,
 
-            Detalles = Carrito.Select(x => new DetalleVentaDto
+            Detalles = Carrito.Select(x => new DetalleVentaDTO
             {
-                ProductoId = x.Id,
-                Cantidad = x.Cantidad
+                ProductoID = x.Id,
+                Cantidad = x.Cantidad,
+                PrecioUnitario = x.PrecioUnitario ?? 0,
+                TipoVenta = x.TipoVenta
+                
             }).ToList()
         };
 
@@ -419,7 +471,7 @@
             MostrarModalPago = false;
         }
     }
-    private bool PuedeAgregar(ProductoDto producto)
+    private bool PuedeAgregar(ProductoDTO producto)
     {
         var item = Carrito.FirstOrDefault(x => x.Id== producto.Id);
 

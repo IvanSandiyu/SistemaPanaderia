@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Panaderia.Domain.Entidades.Enums
+namespace Panaderia.Shared.Enums
 {
     public enum MetodoDePago
     {
@@ -12,5 +12,6 @@ namespace Panaderia.Domain.Entidades.Enums
         Transferencia = 2,
         Fiado = 3,
         Regalo = 4
+
     }
 }

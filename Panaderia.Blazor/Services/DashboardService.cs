@@ -1,4 +1,4 @@
-﻿using Panaderia.Blazor.Models.Ventas;
+﻿using Panaderia.Shared.Ventas;
 using System.Net.Http.Json;
 
 namespace Panaderia.Blazor.Services
