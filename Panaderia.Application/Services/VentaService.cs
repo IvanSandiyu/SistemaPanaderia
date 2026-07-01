@@ -80,6 +80,12 @@ namespace Panaderia.Application.Services
                             ? p.PrecioVentaUnidad ?? 0
                             : p.PrecioVenta;
 
+                    //Para calcular las ganancias luego
+                    decimal costoAplicado = 
+                        tipoVenta == Panaderia.Domain.Entidades.Enums.TipoVenta.Unidad 
+                        ? p.PrecioCompraUnidad ?? 0 
+                        : p.PrecioCompra ?? 0;
+
                     decimal? subtotal = precioAplicado * detalle.Cantidad;
 
                     venta.Total += subtotal;
@@ -91,6 +97,7 @@ namespace Panaderia.Application.Services
                         Cantidad = detalle.Cantidad,
                         PrecioUnitario = precioAplicado ?? 0,
                         Subtotal = subtotal ?? 0,
+                        CostoUnitario = costoAplicado,
                         //Subtotal = p.PrecioVentaUnidad * detalle.Cantidad ?? 0
 
                     });

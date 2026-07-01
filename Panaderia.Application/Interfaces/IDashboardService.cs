@@ -13,11 +13,12 @@ namespace Panaderia.Application.Interfaces
     {
         Task<DashboardDto> ObtenerDashboard();
         Task<List<ProductoMasVendidoDto>> ProductosMasVendidos();
+        Task<List<DetalleVentaHistorialDto>> VentasPorDia();
         Task<List<ProductoMasVendidoDto>> ProductosMenosVendidos();
 
         Task<List<VentaDiariaDto>> VentasDiarias();
         Task<List<MetodoPagoDto>> MetodoDePago();
-        Task<List<GananciaDto>> Ganancias();
+        Task<decimal?> Ganancias();
 
     }
 }

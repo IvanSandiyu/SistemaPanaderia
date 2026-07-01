@@ -4,6 +4,7 @@ using Panaderia.Application.Interfaces;
 using Panaderia.Shared.DTOs.Productos;
 using Panaderia.Shared.Ventas;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Panaderia.WebApi.Endpoints
 {
@@ -20,8 +21,19 @@ namespace Panaderia.WebApi.Endpoints
             dashGroup.MapGet("/masvendidos", MasVendidos)
                 .WithOpenApi();
 
+            dashGroup.MapGet("/masvendidos-pordia", MasVendidosPorDia)
+                .WithOpenApi();
+
             dashGroup.MapGet("/metodos-pagos", MetodoPago)
                 .WithOpenApi();
+
+            dashGroup.MapGet("/ventashoy", VentasHoy)
+                .WithOpenApi();
+
+            dashGroup.MapGet("/ganancias", Ganancias)
+                .WithOpenApi();
+
+
         }
 
         private async Task<List<VentaDiariaDto>> VentasDiarias(IDashboardService service)
@@ -40,6 +52,24 @@ namespace Panaderia.WebApi.Endpoints
         {
             var metodos = await service.MetodoDePago();
             return metodos;
+        }
+
+        public async Task<List<VentaDiariaDto>> VentasHoy(IDashboardService service)
+        {
+            var lista = await service.VentasDiarias();
+            return lista;
+        }
+
+        public async Task<List<DetalleVentaHistorialDto>> MasVendidosPorDia(IDashboardService service)
+        {
+            var lista = await service.VentasPorDia();
+            return lista;
+        }
+
+        public async Task<decimal?> Ganancias(IDashboardService service)
+        {
+            var ganancia = await service.Ganancias();
+            return ganancia;
         }
     }
 }

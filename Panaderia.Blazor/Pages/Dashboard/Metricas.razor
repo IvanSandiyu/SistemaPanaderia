@@ -1,4 +1,9 @@
 ﻿@page "/dashboard"
+@using Panaderia.Blazor.Services
+@using Panaderia.Shared.DTOs.Productos
+@using Panaderia.Shared.Ventas
+
+@inject DashboardService DashboardService
 
 <div class="container-fluid">
 
@@ -36,7 +41,7 @@
                             </small>
 
                             <h2 class="fw-bold text-primary">
-                                124
+                                 @ContProductos
                             </h2>
 
                         </div>
@@ -66,7 +71,7 @@
                             </small>
 
                             <h2 class="fw-bold text-success">
-                                $85.450
+                               $ @RecaudacionHoy.ToString("C")
                             </h2>
 
                         </div>
@@ -96,7 +101,7 @@
                             </small>
 
                             <h2 class="fw-bold text-warning">
-                                $31.200
+                                $ @Ganancias.ToString("C")
                             </h2>
 
                         </div>
@@ -187,3 +192,24 @@
     </div>
 
 </div>
+
+@code {
+    private List<VentaDiariaDto> listaVendidos = new();
+    private List<DetalleVentaHistorialDto> listaProductosVendidos = new();
+    private decimal RecaudacionHoy { get; set; } = 0;
+    private decimal? ContProductos { get; set; } = 0;
+    private decimal Ganancias { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaVendidos = await DashboardService.VentasPorDia();
+        RecaudacionHoy = listaVendidos.Where(x => x.Fecha.Date == DateTime.Today).Sum(x => x.Total ?? 0);
+
+        listaProductosVendidos = await DashboardService.ProductoMasVendidoDiario();
+        ContProductos =listaProductosVendidos.Sum(x => x.Cantidad ?? 0);
+
+        Ganancias = await DashboardService.Ganancias() ?? 0;
+
+    }
+
+}

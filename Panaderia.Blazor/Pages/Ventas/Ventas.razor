@@ -235,7 +235,8 @@
                                     </td>
 
                                     <td>
-                                        $ @((item.Cantidad * item.PrecioUnitario)?.ToString("N2"))
+                                        @* $ @((item.Cantidad * item.PrecioUnitario)?.ToString("N2")) *@
+                                        $ @item.Subtotal?.ToString("N2")
                                     </td>
 
                                 </tr>
@@ -385,7 +386,7 @@
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 PrecioUnitario = producto.PrecioVentaUnidad ?? 0,
-                //PrecioAplicado = producto.PrecioVentaUnidad.Value ,
+                PrecioAplicado = producto.PrecioVentaUnidad.Value ,
                 Cantidad = 1,
                 TipoVenta = TipoVenta.Unidad
             });

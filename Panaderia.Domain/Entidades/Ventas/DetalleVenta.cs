@@ -24,5 +24,8 @@ namespace Panaderia.Domain.Entidades.Ventas
         public decimal PrecioUnitario { get; set; }
 
         public decimal? Subtotal { get; set; }
+
+        //Para las ganancias
+        public decimal CostoUnitario { get; set; }
     }
 }

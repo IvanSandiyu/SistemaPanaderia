@@ -26,6 +26,9 @@ namespace Panaderia.Infrastructure.EntityFramework.Configurations
             builder.Property(x => x.Subtotal)
                 .HasColumnType("decimal(18,2)");
 
+            builder.Property(x => x.CostoUnitario)
+                .HasPrecision(18, 2);
+
 
             builder.HasOne(x => x.Producto)
                 .WithMany()
