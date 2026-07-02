@@ -7,57 +7,243 @@
 @inject ProductoService ProductoService
 @inject NavigationManager Navigation
 
-<h3>Nuevo Producto</h3>
+<div class="row justify-content-center">
 
-<EditForm Model="Producto" OnValidSubmit="Guardar">
+    <div class="col-lg-8">
 
-    <div class="mb-3">
-        <label>Nombre</label>
-        <InputText class="form-control"
-                   @bind-Value="Producto.Nombre" />
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-success text-white">
+
+                <h4 class="mb-0">
+
+                    <i class="bi bi-plus-circle me-2"></i>
+
+                    Nuevo Producto
+
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                <EditForm Model="Producto"
+                          OnValidSubmit="Guardar">
+
+                    <div class="row">
+
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label">
+                                Nombre
+                            </label>
+
+                            <InputText class="form-control"
+                                       @bind-Value="Producto.Nombre" />
+
+                        </div>
+
+
+                        <!-- ===================== KG ===================== -->
+
+                        <div class="col-12">
+
+                            <h5 class="border-bottom pb-2 mb-3">
+
+                                Venta por Kilogramo
+
+                            </h5>
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Precio Compra Kg
+
+                            </label>
+
+                            <InputNumber class="form-control"
+                                         @bind-Value="Producto.PrecioCompra" />
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                % Ganancia Kg
+
+                            </label>
+
+                            <InputNumber class="form-control"
+                                         @bind-Value="Producto.PorcentajeGanancia" />
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Precio Venta Kg
+
+                            </label>
+
+                            <InputNumber class="form-control"
+                                         @bind-Value="Producto.PrecioVenta"
+                                         disabled="@(Producto.PorcentajeGanancia > 0)" />
+
+                        </div>
+
+
+                        <div class="col-12 mb-4">
+
+                            <div class="alert alert-info">
+
+                                Precio sugerido Kg:
+
+                                <strong>
+
+                                    $ @PrecioVentaCalculado
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ===================== UNIDAD ===================== -->
+
+                        <div class="col-12">
+
+                            <h5 class="border-bottom pb-2 mb-3">
+
+                                Venta por Unidad
+
+                            </h5>
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Precio Compra Unidad
+
+                            </label>
+
+                            <InputNumber class="form-control"
+                                         @bind-Value="Producto.PrecioCompraUnidad" />
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                % Ganancia Unidad
+
+                            </label>
+
+                            <InputNumber class="form-control"
+                                         @bind-Value="Producto.PorcentajeGananciaUnidad" />
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+
+                                Precio Venta Unidad
+
+                            </label>
+
+                            <InputNumber class="form-control"
+                                         @bind-Value="Producto.PrecioVentaUnidad"
+                                         disabled="@(Producto.PorcentajeGananciaUnidad > 0)" />
+
+                        </div>
+
+
+                        <div class="col-12 mb-4">
+
+                            <div class="alert alert-info">
+
+                                Precio sugerido Unidad:
+
+                                <strong>
+
+                                    $ @PrecioVentaUnidadCalculado
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ===================== STOCK ===================== -->
+
+                        <div class="col-md-6 mb-4">
+
+                            <label class="form-label">
+
+                                Stock Inicial
+
+                            </label>
+
+                            <InputNumber class="form-control"
+                                         @bind-Value="Producto.StockActual" />
+
+                        </div>
+
+                    </div>
+
+
+                    <hr />
+
+
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                @onclick="Cancelar">
+
+                            <i class="bi bi-x-circle me-2"></i>
+
+                            Cancelar
+
+                        </button>
+
+
+                        <button type="submit"
+                                class="btn btn-success">
+
+                            <i class="bi bi-check-circle me-2"></i>
+
+                            Crear Producto
+
+                        </button>
+
+                    </div>
+
+                </EditForm>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="mb-3">
-        <label>Precio Compra</label>
-        <InputNumber class="form-control"
-                     @bind-Value="Producto.PrecioCompra" />
-    </div>
-
-    <div class="mb-3">
-        <label>Precio Venta</label>
-        <InputNumber class="form-control"
-                     @bind-Value="Producto.PrecioVenta" 
-                     disabled="@(Producto.PorcentajeGanancia > 0)" />
-    </div>
-
-    <div class="mb-3">
-        <label>Porcentaje Ganancia</label>
-        <InputNumber class="form-control"
-                     @bind-Value="Producto.PorcentajeGanancia" />
-    </div>
-
-    <div class="mb-3">
-        <label>Stock</label>
-        <InputNumber class="form-control"
-                     @bind-Value="Producto.StockActual" />
-    </div>
-
-    <div class="alert alert-info">
-        Precio sugerido:
-        <strong>$ @PrecioVentaCalculado</strong>
-    </div>
-
-    <button type="submit" class="btn btn-success">
-        Guardar
-    </button>
-
-    <button type="button"
-            class="btn btn-secondary ms-2"
-            @onclick="Cancelar">
-        Cancelar
-    </button>
-
-</EditForm>
+</div>
 
 @code {
 
@@ -80,6 +266,17 @@
             Navigation.NavigateTo("/productos");
         }
     }
+    // private decimal? PrecioVentaCalculado =>
+    // Producto.PorcentajeGanancia > 0
+    //     ? Producto.PrecioCompra.GetValueOrDefault()
+    //       * (1 + Producto.PorcentajeGanancia.GetValueOrDefault() / 100)
+    //     : Producto.PrecioVenta.GetValueOrDefault();
+
+    private decimal? PrecioVentaUnidadCalculado =>
+        Producto.PorcentajeGananciaUnidad > 0
+            ? Producto.PrecioCompraUnidad.GetValueOrDefault()
+              * (1 + Producto.PorcentajeGananciaUnidad.GetValueOrDefault() / 100)
+            : Producto.PrecioVentaUnidad.GetValueOrDefault();
 
     private void Cancelar()
     {

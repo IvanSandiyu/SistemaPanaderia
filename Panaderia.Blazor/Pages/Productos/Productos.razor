@@ -15,6 +15,7 @@
                 Productos
             </h2>
 
+
             <small class="text-muted">
                 Gestión de productos y stock
             </small>
@@ -34,9 +35,8 @@
 
         <div class="card-body">
 
-            @if (productos is null) {
+            @if (ProductosFiltrados is null) {
                 <div class="text-center p-4">
-
                     <div class="spinner-border text-primary"></div>
 
                     <p class="mt-3">
@@ -44,7 +44,32 @@
                     </p>
 
                 </div>
+
             } else {
+                <div class="card-header">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-box-seam-fill me-2"></i>
+
+                            Productos
+
+                        </h5>
+
+                        <div style="width:300px">
+
+                            <input class="form-control form-control-sm"
+                                   placeholder="🔎 Buscar producto..."
+                                   @bind="Busqueda"
+                                   @bind:event="oninput" />
+
+                        </div>
+
+                    </div>
+
+                </div>
                 <div class="table-responsive">
 
                     <table class="table table-hover align-middle">
@@ -66,7 +91,7 @@
 
                         <tbody>
 
-                            @foreach (var producto in productos) {
+                            @foreach (var producto in ProductosFiltrados) {
                                 <tr>
 
                                     <td>
@@ -156,5 +181,13 @@
     {
         Navigation.NavigateTo("/productos/nuevo");
     }
+    private string Busqueda = "";
 
+    private IEnumerable<ProductoDTO> ProductosFiltrados =>
+        string.IsNullOrWhiteSpace(Busqueda)
+            ? productos
+            : productos.Where(x =>
+                x.Nombre.Contains(
+                    Busqueda,
+                    StringComparison.OrdinalIgnoreCase));
 }

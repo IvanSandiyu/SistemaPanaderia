@@ -11,6 +11,7 @@
 <h3>Ventas</h3>
 
 <div class="row">
+
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
@@ -31,150 +32,207 @@
         <div class="card shadow-sm">
 
             <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="bi bi-box-seam-fill me-2"></i>
-                    Productos
-                </h5>
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-box-seam-fill me-2"></i>
+
+                        Productos
+
+                    </h5>
+
+                    <div style="width:300px">
+
+                        <input class="form-control form-control-sm"
+                               placeholder="🔎 Buscar producto..."
+                               @bind="Busqueda"
+                               @bind:event="oninput" />
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="card-body p-0">
+            <div class="card-body p-0"
+                 style="max-height:650px;overflow-y:auto;">
 
-                <table class="table table-hover mb-0">
+                <table class="table table-hover table-sm mb-0">
 
-                    <thead class="table-light">
+                    <thead class="table-light sticky-top">
+
                         <tr>
+
                             <th>Producto</th>
+
                             <th>Precio</th>
+
                             <th>Stock</th>
-                            <th>Unidad / Kg</th>
-                            <th>Monto</th>
-                            
+
+                            <th style="width:230px">
+
+                                Acciones
+
+                            </th>
+
                         </tr>
+
                     </thead>
 
                     <tbody>
 
-                        @foreach (var producto in Productos) {
+                        @foreach (var producto in ProductosFiltrados) {
+
                             <tr>
 
                                 <td>
-                                    <strong>@producto.Nombre</strong>
+
+                                    <strong>
+
+                                        @producto.Nombre
+
+                                    </strong>
+
                                 </td>
 
+
                                 <td>
-                                   @*  $ @producto.PrecioVenta
-                                    <br />
-                                    <small class="text-muted">por Kg</small> *@
+
                                     @if (producto.PrecioVentaUnidad.HasValue) {
-                                        <div>
-                                            <strong>Unidad:</strong> $@producto.PrecioVentaUnidad
-                                        </div>
+                                        <small class="d-block">
+
+                                            U:
+                                            $@producto.PrecioVentaUnidad
+
+                                        </small>
                                     }
 
                                     @if (producto.PrecioVenta > 0) {
-                                        <div>
-                                            <strong>Kg:</strong> $@producto.PrecioVenta
-                                        </div>
+                                        <small class="d-block">
+
+                                            Kg:
+                                            $@producto.PrecioVenta
+
+                                        </small>
                                     }
+
                                 </td>
+
 
                                 <td>
 
                                     @if (producto.StockActual == 0) {
                                         <span class="badge bg-danger">
-                                            Sin stock
+
+                                            0
+
                                         </span>
                                     } else if (producto.StockActual <= 10) {
                                         <span class="badge bg-warning text-dark">
+
                                             @producto.StockActual
+
                                         </span>
                                     } else {
                                         <span class="badge bg-success">
+
                                             @producto.StockActual
+
                                         </span>
                                     }
 
                                 </td>
-                            
+
                                 <td>
-                                    @if (producto.PrecioVentaUnidad.HasValue) {
-                                        <div class="mb-2">
 
-                                            <button class="btn btn-success btn-sm w-100"
+                                    <div class="d-flex gap-1 flex-wrap">
+
+                                        @if (producto.PrecioVentaUnidad.HasValue) {
+                                            <button class="btn btn-success btn-sm"
+                                                    title="Unidad"
                                                     @onclick="() => AgregarAlCarrito(producto)">
-                                                +1 Unidad
+
+                                                U
+
                                             </button>
+                                        }
 
-                                        </div>
-                                    }
 
-                                    @if (producto.PrecioVenta > 0 ) {
-                                        <div class="btn-group btn-group-sm">
+                                        @if (producto.PrecioVenta > 0) {
 
-                                            <button class="btn btn-outline-primary"
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                    title="1/4 Kg"
                                                     @onclick="() => AgregarPorKg(producto, 0.25m)">
-                                                ¼ Kg
+
+                                                ¼
+
                                             </button>
 
-                                            <button class="btn btn-outline-primary"
+
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                    title="1/2 Kg"
                                                     @onclick="() => AgregarPorKg(producto, 0.50m)">
-                                                ½ Kg
+
+                                                ½
+
                                             </button>
 
-                                            <button class="btn btn-outline-primary"
-                                                    @onclick="() => AgregarPorKg(producto, 1)">
-                                                1 Kg
+
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                    title="1 Kg"
+                                                    @onclick="() => AgregarPorKg(producto, 1m)">
+
+                                                1
+
+                                            </button>
+
+                                        }
+
+                                    </div>
+
+
+                                    @if (producto.PrecioVenta > 0) {
+
+                                        <div class="mt-1 d-flex">
+
+                                            <input type="number"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="$"
+                                                   value="@Montos.GetValueOrDefault(producto.Id)"
+                                                   @oninput="e => Montos[producto.Id] =
+                                                   decimal.TryParse(
+                                                   e.Value?.ToString(),
+                                                   out var v)
+                                                   ? v : 0" />
+
+
+
+                                    <button class="btn btn-warning btn-sm ms-1"
+                                            @onclick="() =>
+
+                                                                                            AgregarPorMonto(
+
+                                                                                            producto,
+
+                                                                                            Montos.GetValueOrDefault(
+
+                                                                                            producto.Id))">
+
+                                        $
+
                                             </button>
 
                                         </div>
-                                    }
 
-                                    @* <div class="btn-group btn-group-sm">
-
-                                        <button class="btn btn-success"
-                                                @onclick="() => AgregarAlCarrito(producto)">
-                                            +1
-                                        </button>
-
-                                        <button class="btn btn-outline-primary"
-                                                @onclick="() => AgregarPorKg(producto, 0.25m)">
-                                            ¼ Kg
-                                        </button>
-
-                                        <button class="btn btn-outline-primary"
-                                                @onclick="() => AgregarPorKg(producto, 0.50m)">
-                                            ½ Kg
-                                        </button>
-
-                                        <button class="btn btn-outline-primary"
-                                                @onclick="() => AgregarPorKg(producto, 1m)">
-                                            1 Kg
-                                        </button>
-
-                                    </div> *@
+                                                                }
 
                                 </td>
 
-                                <td style="width:170px">
+                            </tr>
 
-                                    <input type="number"
-                                           class="form-control form-control-sm"
-                                           value="@Montos.GetValueOrDefault(producto.Id)"
-                                           @oninput="e => Montos[producto.Id] = decimal.TryParse(e.Value?.ToString(), out var v) ? v : 0" />
-
-                                    <button class="btn btn-warning btn-sm mt-1 w-100"
-                                            @onclick="() => AgregarPorMonto(producto,
-                                            Montos.GetValueOrDefault(producto.Id))">
-
-                                    <i class="bi bi-cash"></i>
-                                    Agregar
-
-                                </button>
-
-                            </td>
-
-                        </tr>
-                                                }
+                        }
 
                     </tbody>
 
@@ -230,7 +288,7 @@
 
                                     <td>
                                         <span class="badge bg-secondary">
-                                            @item.Cantidad
+                                            @item.Cantidad?.ToString("N3")
                                         </span>
                                     </td>
 
@@ -374,6 +432,15 @@
             Montos[producto.Id] = 0;
         }
     }
+    private string Busqueda = "";
+
+    private IEnumerable<ProductoDTO> ProductosFiltrados =>
+        string.IsNullOrWhiteSpace(Busqueda)
+            ? Productos
+            : Productos.Where(x =>
+                x.Nombre.Contains(
+                    Busqueda,
+                    StringComparison.OrdinalIgnoreCase));
 
     private void AgregarAlCarrito(ProductoDTO producto)
     {
@@ -401,7 +468,7 @@
         if (montoIngresado <= 0)
             return;
 
-        decimal? cantidadKg = montoIngresado / producto.PrecioVenta;
+        decimal? cantidadKg = Math.Round(montoIngresado / producto.PrecioVenta.Value,2);
 
         var item = Carrito.FirstOrDefault(x => x.Id == producto.Id && x.TipoVenta == TipoVenta.Monto);
 
