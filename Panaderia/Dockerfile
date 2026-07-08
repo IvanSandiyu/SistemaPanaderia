@@ -8,7 +8,7 @@ COPY . .
 RUN dotnet restore
 
 # 3. Compilamos la API buscando el archivo .csproj directamente donde sea que esté
-RUN dotnet publish **/Panaderia.WebApi.csproj -c Release -o /app/publish
+RUN dotnet publish **/Panaderia.Blazor.csproj -c Release -o /app/publish
 
 # 4. Imagen final de ejecución
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
