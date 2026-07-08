@@ -3,6 +3,8 @@ using Panaderia.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
 using Panaderia.Domain.Entidades.Productos;
 using Panaderia.Domain.Entidades.Ventas;
+using Microsoft.EntityFrameworkCore.Internal;
+using Panaderia.Domain.Entidades.Proveedores;
 namespace Panaderia.Infrastructure.EntityFramework
 {
     public class PanaderiaDbContext: DbContext, IApplicationDbContext
@@ -20,6 +22,9 @@ namespace Panaderia.Infrastructure.EntityFramework
         public DbSet<MovimientoStock> MovimientosStock { get; set; }
         
         public DbSet<DetalleVenta> DetalleVentas { get ; set ; }
+
+        public DbSet<Proveedor> Proveedores { get; set; }
+
 
         protected override void OnModelCreating(
             ModelBuilder modelBuilder)

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Panaderia.Domain.Entidades.Productos;
 using Panaderia.Domain.Entidades.Ventas;
+using Panaderia.Domain.Entidades.Proveedores;
 
 namespace Panaderia.Application.Interfaces
 {
@@ -17,6 +18,8 @@ namespace Panaderia.Application.Interfaces
         DbSet<MovimientoStock> MovimientosStock { get; set; }
         DbSet<Venta> Ventas { get; set; }
         DbSet<DetalleVenta> DetalleVentas{ get; set; }
+
+        DbSet<Proveedor> Proveedores { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
