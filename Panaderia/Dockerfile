@@ -4,24 +4,23 @@ WORKDIR /src
 # 1. Copiamos todo el repositorio
 COPY . .
 
-# 2. Restauramos paquetes NuGet de la solución
+# 2. Restauramos paquetes NuGet
 RUN dotnet restore
 
-# 3. Publicamos el proyecto Blazor apuntando a su raíz de compilación
-WORKDIR "/src"
+# 3. Publicamos el proyecto Blazor apuntando a su .csproj
 RUN dotnet publish **/Panaderia.Blazor.csproj -c Release -o /app/output
 
-# 4. Imagen final de ejecución (cambiamos al directorio de trabajo limpio)
+# 4. Imagen final de ejecución
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# Copiamos todo el contenido publicado (incluyendo el wwwroot de Blazor)
+# Copiamos todo el contenido publicado
 COPY --from=build /app/output .
 
-# Configuraciones de red explícitas para el ciclo de vida de Render
+# Configuraciones de red para Render
 ENV ASPNETCORE_HTTP_PORTS=10000
 ENV ASPNETCORE_URLS=http://*:10000
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-# Forzamos a que el punto de inicio sea el ejecutable directo
-ENTRYPOINT ["dotnet", "Panaderia.Blazor.dll"]
+# TRUCO DEFINITIVO: Buscamos la DLL principal dinámicamente para que no falle por el nombre
+ENTRYPOINT ["sh", "-c", "dotnet $(ls *.runtimeconfig.json | cut -d'.' -f1-2).dll"]
