@@ -11,7 +11,7 @@ namespace Panaderia.WebApi.Endpoints
             var provGroup = app.MapGroup("api/proveedores")
                 .WithOpenApi();
 
-            provGroup.MapGet("/proveedores", ObtenerTodos)
+            provGroup.MapGet("/lista-proveedores", ObtenerTodos)
                 .WithOpenApi();
         }
 

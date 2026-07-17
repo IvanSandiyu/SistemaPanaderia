@@ -16,7 +16,7 @@ namespace Panaderia.Blazor.Services
         public async Task<List<ProveedorDTO>> ObtenerTodos()
         {
             return await _http.GetFromJsonAsync<List<ProveedorDTO>>(
-                "api/proveedores")
+                "api/proveedores/lista-proveedores")
                 ?? new();
         }
 
