@@ -21,18 +21,30 @@ namespace Panaderia.WebApi.Endpoints
                 .WithOpenApi();
         }
         //Cambiar A results(bad request,ok,etc)
-        public async Task<bool> GenerarVenta(VentaDto venta, IVentaService _service)
+        public async Task<IResult> GenerarVenta(VentaDto venta, IVentaService _service)
         {
-            if (venta is null)
-                return false;
+            try {
+                if (venta is null)
+                    return Results.Problem();
 
-            return await _service.VentaRealizada(venta);
+                var response = await _service.VentaRealizada(venta);
+                return Results.Ok(response);
+
+            }catch(Exception ex) {
+                return Results.Problem(ex.Message);
+            }
         }
         
         public async Task<IResult> HistorialVentas(DateTime? desde, DateTime? hasta, int? pagina,IVentaService _service)
         {
-            var listVentas = await  _service.HistorialVentas(desde,hasta,pagina);
-            return Results.Ok(listVentas);
+            try {
+                var listVentas = await _service.HistorialVentas(desde, hasta, pagina);
+                return Results.Ok(listVentas);
+            }
+            catch(Exception ex) { 
+                return Results.Problem(ex.Message);
+            }
+            
         }
     }
 }

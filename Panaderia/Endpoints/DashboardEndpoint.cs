@@ -36,34 +36,64 @@ namespace Panaderia.WebApi.Endpoints
 
         }
 
-        private async Task<List<VentaDiariaDto>> VentasDiarias(IDashboardService service)
+        private async Task<IResult> VentasDiarias(IDashboardService service)
         {
-            var response = await service.VentasDiarias();
-            return response.ToList();
+            try {
+                var response = await service.VentasDiarias();
+                return Results.Ok(response);
+            } catch (Exception ex) {
+                return Results.Problem(ex.Message);
+            }
+
+            
+            
         }
 
-        public async Task<List<ProductoMasVendidoDto>> MasVendidos(IDashboardService service)
+        public async Task<IResult> MasVendidos(IDashboardService service)
         {
-            var lista = await service.ProductosMasVendidos();
-            return lista.ToList();
+            try {
+                var lista = await service.ProductosMasVendidos();
+                return Results.Ok(lista);
+
+            }
+            catch (Exception ex) {
+                return Results.Problem(ex.Message);
+            }
+            
         }
 
-        public async Task<List<MetodoPagoDto>> MetodoPago(IDashboardService service)
+        public async Task<IResult> MetodoPago(IDashboardService service)
         {
-            var metodos = await service.MetodoDePago();
-            return metodos;
+            try {
+                var metodos = await service.MetodoDePago();
+                return Results.Ok(metodos);
+            } 
+            catch(Exception ex) {
+                return Results.Problem(ex.Message);
+            }
+            
         }
 
-        public async Task<List<VentaDiariaDto>> VentasHoy(IDashboardService service)
+        public async Task<IResult> VentasHoy(IDashboardService service)
         {
-            var lista = await service.VentasDiarias();
-            return lista;
+            try {
+                var metodos = await service.VentasDiarias();
+                return Results.Ok(metodos);
+            } catch (Exception ex) {
+                return Results.Problem(ex.Message);
+            }
+            
         }
 
-        public async Task<List<DetalleVentaHistorialDto>> MasVendidosPorDia(IDashboardService service)
+        public async Task<IResult> MasVendidosPorDia(IDashboardService service)
         {
-            var lista = await service.VentasPorDia();
-            return lista;
+            try {
+                var metodos = await service.VentasPorDia();
+                return Results.Ok(metodos);
+            }
+            catch(Exception ex) {
+                return Results.Problem(ex.Message); 
+            }
         }
 
         public async Task<decimal?> Ganancias(IDashboardService service)

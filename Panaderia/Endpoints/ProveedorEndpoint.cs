@@ -15,10 +15,14 @@ namespace Panaderia.WebApi.Endpoints
                 .WithOpenApi();
         }
 
-        public async Task<List<Proveedor>> ObtenerTodos(IProveedorService service)
+        public async Task<IResult> ObtenerTodos(IProveedorService service)
         {
-            var response = await service.ObtenerTodos();
-            return response.ToList();
+            try {
+                var response = await service.ObtenerTodos();
+                return Results.Ok(response);
+            } catch(Exception ex) {
+                return Results.Problem(ex.Message);
+            }
         }
     }
 }

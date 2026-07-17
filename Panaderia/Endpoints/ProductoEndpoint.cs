@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 namespace Panaderia.WebApi.Endpoints
 {
+    //LO IDEAL SERIA TENER MIDDLEWARE GLOBAL Y SACAR LOS TRY CATCH
     public class ProductoEndpoint : IEndpointDefinition
     {
         public void MapEndpoints(IEndpointRouteBuilder app)
@@ -33,68 +34,83 @@ namespace Panaderia.WebApi.Endpoints
                .WithOpenApi();
         }
         
-        public async Task<bool> CrearProducto([FromBody] ProductoDTO dto, IProductoService _service)
+        public async Task<IResult> CrearProducto([FromBody] ProductoDTO dto, IProductoService _service)
         {
             try {
-                if ((await _service.CrearAsync(dto))) {
-                    return true;
-                }
-                return false;
+                var creado = await _service.CrearAsync(dto);
 
+                if (!creado)
+                    return Results.BadRequest("No fue posible crear el producto.");
+
+                return Results.Created($"/api/productos/{dto.Nombre}", dto);
             } catch (Exception ex) {
-                return false;
+                return Results.Problem(ex.Message);
             }
 
         }
 
-        public async Task<List<Producto>> VerProductos(IProductoService _service)
+        public async Task<IResult> VerProductos(IProductoService _service)
         {
-            List<Producto> productos;
             try {
-                 productos = await _service.ObtenerTodosAsync();
-                return productos;
+                var productos = await _service.ObtenerTodosAsync();
 
-            }catch(Exception ex) {
-                return null;
+                return Results.Ok(productos);
+            } catch (Exception ex) {
+                return Results.Problem(ex.Message);
             }
         }
         
-        public async Task<Producto> ProductoPorCodigo(int id, IProductoService _service)
+        public async Task<IResult> ProductoPorCodigo(int id, IProductoService _service)
         {
             try {
                 if (id <= 0)
-                    return null;
+                    return Results.BadRequest("Id inválido.");
 
-                var p = await _service.ObtenerPorIdAsync(id);
-                return p;
+                var producto = await _service.ObtenerPorIdAsync(id);
 
+                if (producto is null)
+                    return Results.NotFound("Producto no encontrado.");
+
+                return Results.Ok(producto);
             } catch (Exception ex) {
-                return null;
+                return Results.Problem(ex.Message);
             }
         }
         
-        public async Task<bool> ActualizarProducto(int id, [FromBody] ProductoDTO p, IProductoService _service)
+        public async Task<IResult> ActualizarProducto(int id, [FromBody] ProductoDTO p, IProductoService _service)
         {
             try {
                 if (id <= 0)
-                    return false;
+                    return Results.BadRequest("Id inválido.");
 
-                if (await _service.ActualizarAsync(id, p))
-                    return true;
-                return false;
+                var actualizado = await _service.ActualizarAsync(id, p);
 
-            }catch(Exception ex) {
-                return false;
+                if (!actualizado)
+                    return Results.NotFound("Producto no encontrado.");
+
+                return Results.NoContent();
+            } catch (Exception ex) {
+                return Results.Problem(ex.Message);
             }
         }
 
-        public async Task<bool> OcultarProducto(int id, IProductoService _service)
+        public async Task<IResult> OcultarProducto(int id, IProductoService _service)
         {
-            if (id <= 0)
-                return false;
 
-            return await _service.OcultarProducto(id);
-            
+            try {
+                if (id <= 0)
+                    return Results.BadRequest("Id inválido.");
+
+                var eliminado = await _service.OcultarProducto(id);
+
+                if (!eliminado)
+                    return Results.NotFound("Producto no encontrado.");
+
+                return Results.NoContent();
+            } catch (Exception ex) {
+                return Results.Problem(ex.Message);
+            }
+
         }
     }
 
