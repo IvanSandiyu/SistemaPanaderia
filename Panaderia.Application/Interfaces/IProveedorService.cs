@@ -11,7 +11,7 @@ namespace Panaderia.Application.Interfaces
     public interface IProveedorService
     {
         Task<List<Proveedor>> ObtenerTodos();
-        bool CrearProveedor(ProveedorDTO dto);
+        Task<bool> CrearProveedor(ProveedorDTO dto);
         Task<List<ProveedorDTO>> EditarProveedor(ProveedorDTO dto);
         bool DesactivarProveedor();
     }

@@ -1,0 +1,192 @@
+﻿@page "/proveedores/nuevo"
+
+@using Panaderia.Shared.DTOs.Proveedores
+@using Panaderia.Blazor.Services
+
+@inject ProveedorService ProveedorService
+@inject NavigationManager Navigation
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-success text-white">
+
+                <h4 class="mb-0">
+
+                    <i class="bi bi-plus-circle me-2"></i>
+
+                    Nuevo Proveedor
+
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                <EditForm Model="Proveedor"
+                          OnValidSubmit="Guardar">
+
+                    <div class="row">
+
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label">
+                                Nombre
+                            </label>
+
+                            <InputText class="form-control"
+                                       @bind-Value="Proveedor.Nombre" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                CUIT
+                            </label>
+
+                            <InputText class="form-control"
+                                       @bind-Value="Proveedor.Cuit" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Teléfono
+                            </label>
+
+                            <InputText class="form-control"
+                                       @bind-Value="Proveedor.Telefono" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Email
+                            </label>
+
+                            <InputText class="form-control"
+                                       @bind-Value="Proveedor.Email" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Estado
+                            </label>
+
+                            <InputSelect class="form-select"
+                                         @bind-Value="Proveedor.Activo">
+
+                                <option value="true">Activo</option>
+                                <option value="false">Inactivo</option>
+
+                            </InputSelect>
+
+                        </div>
+
+                        <div class="col-12 mb-4">
+
+                            <label class="form-label">
+                                Dirección
+                            </label>
+
+                            <InputTextArea class="form-control"
+                                           rows="3"
+                                           @bind-Value="Proveedor.Direccion" />
+
+                        </div>
+
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                @onclick="Cancelar">
+
+                            <i class="bi bi-x-circle me-2"></i>
+
+                            Cancelar
+
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-success">
+
+                            <i class="bi bi-check-circle me-2"></i>
+
+                            Crear Proveedor
+
+                        </button>
+
+                    </div>
+
+                </EditForm>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@if (MostrarMensaje) {
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+        <div class="toast show text-bg-success">
+
+            <div class="d-flex">
+
+                <div class="toast-body">
+
+                    @Mensaje
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+@code {
+
+    private ProveedorDTO Proveedor = new();
+
+    private string Mensaje = "";
+
+    private bool MostrarMensaje = false;
+
+    private async Task Guardar()
+    {
+        var creado = await ProveedorService.CrearProveedor(Proveedor);
+
+        if (creado) {
+            Mensaje = "Proveedor creado con éxito";
+            MostrarMensaje = true;
+
+            StateHasChanged();
+
+            await Task.Delay(2000);
+
+            Navigation.NavigateTo("/proveedores");
+        }
+    }
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/proveedores");
+    }
+
+}

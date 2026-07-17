@@ -17,9 +17,25 @@ namespace Panaderia.Application.Services
         {
             _context = context;
         }
-        public bool CrearProveedor(ProveedorDTO dto)
+        public async Task<bool> CrearProveedor(ProveedorDTO dto)
         {
-            throw new NotImplementedException();
+            if(dto is null)
+                throw new ArgumentNullException(nameof(dto));
+
+            var proveedor = new Proveedor
+            {
+                Nombre = dto.Nombre,
+                Cuit = dto.Cuit,
+                Telefono = dto.Telefono,
+                Email = dto.Email,
+                Direccion = dto.Direccion,
+                Activo = dto.Activo
+            };
+
+            await _context.Proveedores.AddAsync(proveedor);
+            if (await _context.SaveChangesAsync() > 0)
+                return true;
+            return false;
         }
 
         public bool DesactivarProveedor()

@@ -1,5 +1,4 @@
-﻿using Panaderia.Shared.DTOs.Productos;
-using Panaderia.Shared.DTOs.Proveedores;
+﻿using Panaderia.Shared.DTOs.Proveedores;
 using System.Net.Http.Json;
 
 namespace Panaderia.Blazor.Services
@@ -18,6 +17,14 @@ namespace Panaderia.Blazor.Services
             return await _http.GetFromJsonAsync<List<ProveedorDTO>>(
                 "api/proveedores/lista-proveedores")
                 ?? new();
+        }
+        public async Task<bool> CrearProveedor(ProveedorDTO dto)
+        {
+            var response = await _http.PostAsJsonAsync(
+                "api/proveedores/crearproveedor",
+                dto);
+
+            return response.IsSuccessStatusCode;
         }
 
 
