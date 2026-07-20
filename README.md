@@ -82,7 +82,7 @@ El proyecto está construido utilizando:
 - Autenticación JWT
 - Login de usuarios
 - Gestión de clientes
-- Gestión de proveedores
+- Gestión de proveedores ( en curso )
 - Reportes avanzados
 - Exportación a PDF/Excel
 - Alertas de stock bajo
