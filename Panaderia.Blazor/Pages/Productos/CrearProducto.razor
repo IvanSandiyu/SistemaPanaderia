@@ -3,8 +3,10 @@
 
 @using Panaderia.Shared.DTOs.Productos
 @using Panaderia.Blazor.Services
+@using Panaderia.Shared.DTOs.Proveedores
 
 @inject ProductoService ProductoService
+@inject ProveedorService ProveedorService
 @inject NavigationManager Navigation
 
 <div class="row justify-content-center">
@@ -40,6 +42,28 @@
 
                             <InputText class="form-control"
                                        @bind-Value="Producto.Nombre" />
+
+                        </div>
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label">
+                                Proveedor
+                            </label>
+
+                            <InputSelect class="form-select"
+                                         @bind-Value="Producto.ProveedorId">
+
+                                <option value="0">
+                                    -- Seleccione un proveedor --
+                                </option>
+
+                                @foreach (var proveedor in listaProveedores) {
+                                    <option value="@proveedor.Id">
+                                        @proveedor.Nombre
+                                    </option>
+                                }
+
+                            </InputSelect>
 
                         </div>
 
@@ -248,10 +272,16 @@
 @code {
 
     private ProductoDTO Producto = new();
+    private List<ProveedorDTO> listaProveedores = new();
+    private ProveedorDTO Proveedor = new();
     private string Mensaje { get; set; }
     private bool MostrarMensaje { get; set; } = false;
     private decimal? PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra *(1 + Producto.PorcentajeGanancia / 100m): Producto.PrecioVenta;
-
+    
+    protected override async Task OnInitializedAsync()
+    {
+        listaProveedores = await ProveedorService.ObtenerTodos();
+    }
     private async Task Guardar()
     {
         var creado = await ProductoService.CrearProducto(Producto);

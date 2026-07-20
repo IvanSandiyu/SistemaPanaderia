@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades.Productos;
+using Panaderia.Domain.Entidades.Proveedores;
 using Panaderia.Shared.DTOs.Productos;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,9 @@ namespace Panaderia.Application.Services
             p.PrecioCompra = dto.PrecioCompra;
             p.StockActual = dto.StockActual;
             p.Activo = dto.Activo;
-            
+            p.ProveedorId = dto.ProveedorId;
+
+
             if (dto.PorcentajeGanancia > 0) {
                 p.PrecioVenta =
                     dto.PrecioCompra *
@@ -72,7 +75,8 @@ namespace Panaderia.Application.Services
                 StockActual = dto.StockActual,
                 Activo = dto.Activo,
                 PrecioCompra = dto.PrecioCompra,
-                PrecioCompraUnidad = dto.PrecioCompraUnidad
+                PrecioCompraUnidad = dto.PrecioCompraUnidad,
+                ProveedorId = dto.ProveedorId
             };
             if (dto.PorcentajeGanancia > 0) {
                 producto.PorcentajeGanancia = dto.PorcentajeGanancia;

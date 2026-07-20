@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Panaderia.Domain.Entidades.Proveedores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,10 @@ namespace Panaderia.Domain.Entidades.Productos
         public int CategoriaId { get; set; }
         public decimal? StockActual { get; set; } // Actúa como caché rápido de lectura
         public bool? Activo { get; set; } = true;
+
+        //Proveedores
+        public int? ProveedorId { get; set; }
+        public Proveedor? Proveedor { get; set; }
 
         // Propiedades de navegación
         //public Categoria? Categoria { get; set; }

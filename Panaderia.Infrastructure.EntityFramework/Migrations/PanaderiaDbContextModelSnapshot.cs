@@ -67,10 +67,15 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("ProveedorId")
+                        .HasColumnType("int");
+
                     b.Property<decimal?>("StockActual")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProveedorId");
 
                     b.ToTable("Productos", (string)null);
                 });
@@ -209,6 +214,15 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     b.ToTable("Ventas", (string)null);
                 });
 
+            modelBuilder.Entity("Panaderia.Domain.Entidades.Productos.Producto", b =>
+                {
+                    b.HasOne("Panaderia.Domain.Entidades.Proveedores.Proveedor", "Proveedor")
+                        .WithMany("Productos")
+                        .HasForeignKey("ProveedorId");
+
+                    b.Navigation("Proveedor");
+                });
+
             modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.DetalleVenta", b =>
                 {
                     b.HasOne("Panaderia.Domain.Entidades.Productos.Producto", "Producto")
@@ -237,6 +251,11 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                         .IsRequired();
 
                     b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("Panaderia.Domain.Entidades.Proveedores.Proveedor", b =>
+                {
+                    b.Navigation("Productos");
                 });
 
             modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.Venta", b =>

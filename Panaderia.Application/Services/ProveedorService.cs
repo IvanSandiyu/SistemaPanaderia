@@ -38,14 +38,42 @@ namespace Panaderia.Application.Services
             return false;
         }
 
-        public bool DesactivarProveedor()
+        public async Task<bool> EstadoProveedor(int id)
         {
-            throw new NotImplementedException();
+            var p = await _context.Proveedores.FindAsync(id);
+            if (p == null)
+                return false;
+
+            if (p.Activo is true) {
+                p.Activo = false;
+            }else {
+                p.Activo = true;
+                
+            }
+            await _context.SaveChangesAsync();
+            return true;
+
+
         }
 
-        public Task<List<ProveedorDTO>> EditarProveedor(ProveedorDTO dto)
+        public async Task<bool> EditarProveedor(int id,ProveedorDTO dto)
         {
-            throw new NotImplementedException();
+            if(dto is null) 
+                return false;
+
+            var p = await _context.Proveedores.FindAsync(id);
+            if(p is null)
+                return false;
+
+            p.Nombre = dto.Nombre;
+            p.Cuit = dto.Cuit;
+            p.Telefono = dto.Telefono;
+            p.Email = dto.Email;
+            p.Direccion = dto.Direccion;
+            p.Activo = dto.Activo;
+            
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<List<Proveedor>> ObtenerTodos()
@@ -53,6 +81,24 @@ namespace Panaderia.Application.Services
             List<Proveedor> lista;
             lista = await _context.Proveedores.AsNoTracking().ToListAsync();
             return lista;
+        }
+
+        public async Task<ProveedorDTO> ObtenerPorId(int id)
+        {
+            var p = await _context.Proveedores.FindAsync(id);
+            if (p is null)
+                return null;
+
+            return new ProveedorDTO
+            {
+                Id = p.Id,
+                Nombre = p.Nombre,
+                Cuit = p.Cuit,
+                Telefono = p.Telefono,
+                Email = p.Email,
+                Direccion = p.Direccion,
+                Activo = p.Activo
+            };
         }
     }
 }

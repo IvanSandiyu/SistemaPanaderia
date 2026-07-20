@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Panaderia.Shared.DTOs.Proveedores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace Panaderia.Shared.DTOs.Productos
         public bool Activo { get; set; }
         public decimal? PorcentajeGanancia { get; set; }
         public decimal? PorcentajeGananciaUnidad { get; set; }
-
+        public int ProveedorId { get; set; } 
     }
     //public record ProductoDTO (
     //    int Id,

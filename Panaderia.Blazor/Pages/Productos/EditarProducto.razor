@@ -2,8 +2,10 @@
 
 @using Panaderia.Shared.DTOs.Productos
 @using Panaderia.Blazor.Services
+@using Panaderia.Shared.DTOs.Proveedores
 
 @inject ProductoService ProductoService
+@inject ProveedorService ProveedorService
 @inject NavigationManager Navigation
 
 <div class="container">
@@ -52,6 +54,29 @@
 
                                     <InputText class="form-control"
                                                @bind-Value="Producto.Nombre" />
+
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+
+                                    <label class="form-label">
+                                        Proveedor
+                                    </label>
+
+                                    <InputSelect class="form-select"
+                                                 @bind-Value="Producto.ProveedorId">
+
+                                        <option value="0">
+                                            -- Seleccione un proveedor --
+                                        </option>
+
+                                        @foreach (var proveedor in listaProveedores) {
+                                            <option value="@proveedor.Id">
+                                                @proveedor.Nombre
+                                            </option>
+                                        }
+
+                                    </InputSelect>
 
                                 </div>
 
@@ -214,11 +239,16 @@
     public int Id { get; set; }
 
     public ProductoDTO Producto = new();
+    private ProveedorDTO Proveedor = new();
+    private List<ProveedorDTO> listaProveedores = new();
     private decimal? PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra * (1 + Producto.PorcentajeGanancia / 100m) : Producto.PrecioVenta;
     private decimal? PrecioVentaUnidadCalculado => Producto.PorcentajeGananciaUnidad > 0 ? Producto.PrecioCompraUnidad * (1 + Producto.PorcentajeGananciaUnidad.Value / 100): Producto.PrecioVentaUnidad;
     protected override async Task OnInitializedAsync()
     {
         Producto = await ProductoService.ObtenerPorId(Id);
+        Proveedor = await ProveedorService.ObtenerPorId(Producto.ProveedorId);
+        listaProveedores = await ProveedorService.ObtenerTodos();
+
     }
 
     private async Task Guardar()

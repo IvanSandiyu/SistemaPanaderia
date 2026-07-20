@@ -18,6 +18,15 @@ namespace Panaderia.WebApi.Endpoints
 
             provGroup.MapPost("/crearproveedor", CrearProveedor)
                 .WithOpenApi();
+
+            provGroup.MapPut("/editarproveedor/{id:int}", EditarProveedor)
+                .WithOpenApi();
+
+            provGroup.MapPut("/estadoproveedor/{id:int}", CambiarEstadoProveedor)
+                .WithOpenApi();
+
+            provGroup.MapGet("/proveedorporid/{id:int}", ObtenerPorId)
+                .WithOpenApi();
         }
 
         public async Task<IResult> ObtenerTodos(IProveedorService service)
@@ -39,6 +48,42 @@ namespace Panaderia.WebApi.Endpoints
             catch(Exception ex) {
                 return Results.Problem(ex.Message);
             }
+        }
+
+        public async Task<IResult> EditarProveedor(int id, ProveedorDTO dto, IProveedorService service)
+        {
+            try {
+                var response = await service.EditarProveedor(id, dto);
+                return Results.Ok(response);
+            }
+            catch(Exception ex) {
+                return Results.Problem(ex.Message);
+            }
+        }
+        
+        public async Task<IResult> CambiarEstadoProveedor(int id, IProveedorService service)
+        {
+            try {
+                var response = await service.EstadoProveedor(id);
+                return Results.Ok(response);
+            }
+            catch(Exception ex) {
+                return Results.Problem(ex.Message);
+            }
+            
+        }
+
+        public async Task<IResult> ObtenerPorId(int id, IProveedorService service)
+        {
+            if (id <= 0)
+                return Results.BadRequest();
+
+            var proveedor = await service.ObtenerPorId(id);
+
+            if (proveedor is null)
+                return Results.NotFound();
+
+            return Results.Ok(proveedor);
         }
     }
 }

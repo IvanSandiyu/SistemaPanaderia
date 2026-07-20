@@ -12,7 +12,7 @@ using Panaderia.Infrastructure.EntityFramework;
 namespace Panaderia.Infrastructure.EntityFramework.Migrations
 {
     [DbContext(typeof(PanaderiaDbContext))]
-    [Migration("20260625201759_InitialCreate")]
+    [Migration("20260720193144_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,41 +24,6 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Panaderia.Domain.Entidades.MovimientoStock", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Cantidad")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("Fecha")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Observaciones")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReferenciaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Tipo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductoId");
-
-                    b.ToTable("MovimientosStock", (string)null);
-                });
 
             modelBuilder.Entity("Panaderia.Domain.Entidades.Productos.Producto", b =>
                 {
@@ -86,22 +51,73 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("PrecioCompra")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PrecioVenta")
+                    b.Property<decimal?>("PorcentajeGananciaUnidad")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("StockActual")
+                    b.Property<decimal?>("PrecioCompra")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TipoVenta")
+                    b.Property<decimal?>("PrecioCompraUnidad")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("PrecioVenta")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("PrecioVentaUnidad")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ProveedorId")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("StockActual")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProveedorId");
+
                     b.ToTable("Productos", (string)null);
+                });
+
+            modelBuilder.Entity("Panaderia.Domain.Entidades.Proveedores.Proveedor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit")
+                        .HasColumnName("Activo");
+
+                    b.Property<string>("Cuit")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Cuit");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Direccion");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Nombre");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Telefono");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Proveedores", (string)null);
                 });
 
             modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.DetalleVenta", b =>
@@ -112,7 +128,11 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Cantidad")
+                    b.Property<decimal?>("Cantidad")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CostoUnitario")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PrecioUnitario")
@@ -121,7 +141,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     b.Property<int>("ProductoId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Subtotal")
+                    b.Property<decimal?>("Subtotal")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("VentaId")
@@ -134,6 +154,41 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     b.HasIndex("VentaId");
 
                     b.ToTable("DetalleVentas", (string)null);
+                });
+
+            modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.MovimientoStock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("Cantidad")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("Fecha")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Observaciones")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReferenciaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("MovimientosStock", (string)null);
                 });
 
             modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.Venta", b =>
@@ -154,7 +209,7 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     b.Property<string>("Observaciones")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Total")
+                    b.Property<decimal?>("Total")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -162,15 +217,13 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     b.ToTable("Ventas", (string)null);
                 });
 
-            modelBuilder.Entity("Panaderia.Domain.Entidades.MovimientoStock", b =>
+            modelBuilder.Entity("Panaderia.Domain.Entidades.Productos.Producto", b =>
                 {
-                    b.HasOne("Panaderia.Domain.Entidades.Productos.Producto", "Producto")
-                        .WithMany()
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Panaderia.Domain.Entidades.Proveedores.Proveedor", "Proveedor")
+                        .WithMany("Productos")
+                        .HasForeignKey("ProveedorId");
 
-                    b.Navigation("Producto");
+                    b.Navigation("Proveedor");
                 });
 
             modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.DetalleVenta", b =>
@@ -190,6 +243,22 @@ namespace Panaderia.Infrastructure.EntityFramework.Migrations
                     b.Navigation("Producto");
 
                     b.Navigation("Venta");
+                });
+
+            modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.MovimientoStock", b =>
+                {
+                    b.HasOne("Panaderia.Domain.Entidades.Productos.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("Panaderia.Domain.Entidades.Proveedores.Proveedor", b =>
+                {
+                    b.Navigation("Productos");
                 });
 
             modelBuilder.Entity("Panaderia.Domain.Entidades.Ventas.Venta", b =>

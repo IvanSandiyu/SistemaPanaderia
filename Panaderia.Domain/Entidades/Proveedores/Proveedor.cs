@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Panaderia.Domain.Entidades.Productos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +22,6 @@ namespace Panaderia.Domain.Entidades.Proveedores
         public string? Direccion { get; set; }
 
         public bool Activo { get; set; }
+        public ICollection<Producto> Productos { get; set; } = new List<Producto>();
     }
 }

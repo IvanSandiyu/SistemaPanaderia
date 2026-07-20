@@ -1,0 +1,228 @@
+﻿@page "/proveedores/editar/{Id:int}"
+
+@using Panaderia.Shared.DTOs.Proveedores
+@using Panaderia.Blazor.Services
+
+@inject ProveedorService ProveedorService
+@inject NavigationManager Navigation
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-primary text-white">
+
+                <h4 class="mb-0">
+
+                    <i class="bi bi-pencil-square me-2"></i>
+
+                    Editar Proveedor
+
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                @if (Proveedor is null)
+                {
+                    <div class="text-center p-4">
+
+                        <div class="spinner-border text-primary"></div>
+
+                        <p class="mt-3">
+                            Cargando proveedor...
+                        </p>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+
+                        <strong>ID:</strong> @Proveedor.Id
+
+                    </div>
+
+                    <EditForm Model="Proveedor"
+                              OnValidSubmit="Guardar">
+
+                        <div class="row">
+
+                            <div class="col-md-12 mb-3">
+
+                                <label class="form-label">
+                                    Nombre
+                                </label>
+
+                                <InputText class="form-control"
+                                           @bind-Value="Proveedor.Nombre" />
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    CUIT
+                                </label>
+
+                                <InputText class="form-control"
+                                           @bind-Value="Proveedor.Cuit" />
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Teléfono
+                                </label>
+
+                                <InputText class="form-control"
+                                           @bind-Value="Proveedor.Telefono" />
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Email
+                                </label>
+
+                                <InputText class="form-control"
+                                           @bind-Value="Proveedor.Email" />
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Estado
+                                </label>
+
+                                <InputSelect class="form-select"
+                                             @bind-Value="Proveedor.Activo">
+
+                                    <option value="true">
+                                        Activo
+                                    </option>
+
+                                    <option value="false">
+                                        Inactivo
+                                    </option>
+
+                                </InputSelect>
+
+                            </div>
+
+                            <div class="col-12 mb-4">
+
+                                <label class="form-label">
+                                    Dirección
+                                </label>
+
+                                <InputTextArea class="form-control"
+                                               rows="3"
+                                               @bind-Value="Proveedor.Direccion" />
+
+                            </div>
+
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    @onclick="Cancelar">
+
+                                <i class="bi bi-x-circle me-2"></i>
+
+                                Cancelar
+
+                            </button>
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bi bi-check-circle me-2"></i>
+
+                                Guardar Cambios
+
+                            </button>
+
+                        </div>
+
+                    </EditForm>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@if (MostrarMensaje)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+        <div class="toast show text-bg-success">
+
+            <div class="d-flex">
+
+                <div class="toast-body">
+
+                    @Mensaje
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ProveedorDTO Proveedor = new();
+
+    private bool MostrarMensaje;
+
+    private string Mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Proveedor = await ProveedorService.ObtenerPorId(Id);
+    }
+
+    private async Task Guardar()
+    {
+        
+        var actualizado = await ProveedorService.EditarProveedor(Id, Proveedor);
+
+        if (actualizado)
+        {
+            Mensaje = "Proveedor actualizado correctamente.";
+            MostrarMensaje = true;
+
+            StateHasChanged();
+
+            await Task.Delay(2000);
+
+            Navigation.NavigateTo("/proveedores");
+        }   
+    }
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/proveedores");
+    }
+
+}
