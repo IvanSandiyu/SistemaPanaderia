@@ -5,21 +5,32 @@
 @using Panaderia.Blazor.Services
 
 @inject VentaService VentaService
-<div class="d-flex justify-content-between align-items-center mb-4">
+@inject ReporteService ReporteService
+@inject IJSRuntime JS
 
-    <div>
-        <h2>
-            <i class="bi bi-clock-history me-2"></i>
-            Historial de Ventas
-        </h2>
+<div class="row">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <small class="text-muted">
-            Consulta de ventas realizadas
-        </small>
+        <div>
+            <h2>
+                <i class="bi bi-clock-history me-2"></i>
+                Historial de Ventas
+            </h2>
+
+            <small class="text-muted">
+                Consulta de ventas realizadas
+            </small>
+        </div>
+        <button class="btn btn-outline-success"
+                @onclick="AbrirModalReporte">
+
+            <i class="bi bi-file-earmark-arrow-down me-2"></i>
+            Reporte de ventas
+
+        </button>
+
     </div>
 
-</div>
-<div class="row">
 
     <div class="col-lg-8">
 
@@ -185,7 +196,7 @@
                                     </td>
 
                                     <td>
-                                        $ @((item.Cantidad* item.PrecioVenta)?.ToString("N2"))
+                                        $ @((item.Cantidad * item.PrecioVenta)?.ToString("N2"))
                                     </td>
 
                                 </tr>
@@ -237,14 +248,126 @@
     </div>
 
 </div>
+@if (MostrarModalReporte) {
+    <div class="modal fade show d-block"
+         tabindex="-1"
+         style="background-color:rgba(0,0,0,.5);">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        <i class="bi bi-file-earmark-arrow-down me-2"></i>
+
+                        Exportar Reporte
+
+                    </h5>
+
+                    <button class="btn-close"
+                            @onclick="CerrarModalReporte">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="alert alert-info">
+
+                        <strong>Acceso rápido</strong>
+
+                        <hr />
+
+                        <button class="btn btn-success w-100"
+                                @onclick="ExportarHoy">
+
+                            <i class="bi bi-calendar-check me-2"></i>
+
+                            Exportar ventas del día
+                            <br />
+
+                            <small>
+                                08:00 hs - 21:00 hs
+                            </small>
+
+                        </button>
+
+                    </div>
+
+                    <hr />
+
+                    <h6>Rango personalizado</h6>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label>Desde</label>
+
+                            <InputDate class="form-control"
+                                       @bind-Value="FechaDesde" />
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label>Hasta</label>
+
+                            <InputDate class="form-control"
+                                       @bind-Value="FechaHasta" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-secondary"
+                            @onclick="CerrarModalReporte">
+
+                        Cancelar
+
+                    </button>
+
+                    <button class="btn btn-danger"
+                            @onclick="ExportarPdf">
+
+                        <i class="bi bi-file-earmark-pdf me-2"></i>
+
+                        PDF
+
+                    </button>
+
+                    <button class="btn btn-success"
+                            @onclick="ExportarExcel">
+
+                        <i class="bi bi-file-earmark-excel me-2"></i>
+
+                        Excel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
 
 
 @code {
     private List<VentaHistorialDto>? ventas = new();
     private List<CarritoItemDto> Item = new();
     public decimal? Subtotal { get; set; }
-    //Mostrar detalleventahistorialdto
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -282,4 +405,64 @@
             ventas = await VentaService.HistorialVentas(PaginaActual);
         }
     }
+    private bool MostrarModalReporte;
+
+    private void AbrirModalReporte()
+    {
+        MostrarModalReporte = true;
+    }
+
+    private void CerrarModalReporte()
+    {
+        MostrarModalReporte = false;
+    }
+    private DateTime? FechaDesde = DateTime.Today;
+    private DateTime? FechaHasta = DateTime.Today;
+
+    private async Task ExportarHoy()
+    {
+        FechaDesde = DateTime.Today.AddHours(8);
+        FechaHasta = DateTime.Today.AddHours(21);
+        var pdf = await ReporteService.ExportarVentasPdf(FechaDesde,FechaHasta);
+
+        var base64 = Convert.ToBase64String(pdf);
+
+        await JS.InvokeVoidAsync
+        ("downloadFile",
+          $"ReporteVentas_{FechaDesde:dd-MM-yyyy}_{FechaHasta:dd-MM-yyyy}.pdf",
+          "application/pdf",
+          base64);
+
+    }
+
+    
+    private async Task ExportarPdf()
+    {
+        var desde = FechaDesde?.Date;
+
+        var hasta = FechaHasta?.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+        var pdf = await ReporteService.ExportarVentasPdf(desde, hasta);
+        var base64 = Convert.ToBase64String(pdf);
+
+        await JS.InvokeVoidAsync(
+           "downloadFile",
+           $"ReporteVentas_{FechaDesde:dd-MM-yyyy}_{FechaHasta:dd-MM-yyyy}.pdf",
+           "application/pdf",
+           base64);
+
+        MostrarModalReporte = false;
+    }
+    private async Task ExportarExcel()
+    {
+        var desde = FechaDesde?.Date;
+
+        var hasta = FechaHasta?.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+        var excel = await ReporteService.ExportarVentasExcel(desde, hasta);
+        var base64 = Convert.ToBase64String(excel);
+        await JS.InvokeVoidAsync
+        ("downloadFile",$"ReporteVentas_{FechaDesde:dd-MM-yyyy}_{FechaHasta:dd-MM-yyyy}.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",base64);
+
+        MostrarModalReporte = false;
+    }
 }
+

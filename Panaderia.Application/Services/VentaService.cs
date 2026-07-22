@@ -4,11 +4,13 @@ using Panaderia.Application.Specifications;
 using Panaderia.Application.Specifications.Ventas;
 using Panaderia.Domain.Entidades.Enums;
 using Panaderia.Domain.Entidades.Ventas;
+using Panaderia.Shared.DTOs.Reportes;
 using Panaderia.Shared.DTOs.Ventas;
 using Panaderia.Shared.Enums;
 using Panaderia.Shared.Ventas;
 using System.ComponentModel.Design;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Panaderia.Application.Services
 {
@@ -23,35 +25,41 @@ namespace Panaderia.Application.Services
 
         public async Task<List<VentaHistorialDto>> HistorialVentas(DateTime? desde, DateTime? hasta, int? pagina)
         {
-            const int pageSize = 10;
             var spec = new HistorialVentasSpecification();
-            var query = SpecificationEvaluator<Venta>.GetQuery(_context.Ventas.AsQueryable(), spec);
-            query = query.Include(v => v.Detalles).ThenInclude(d => d.Producto);
-            
-            if (desde.HasValue) query = query.Where(x => x.Fecha >= desde.Value);
-            if (hasta.HasValue) query = query.Where(x => x.Fecha <= hasta.Value);
-            
-            if (!pagina.HasValue) pagina = 1;
-            query = query.Skip((pagina.Value - 1) * 10) .Take(10);
-            var ventas = await query.ToListAsync();
-         
-            return ventas.Select(v => new VentaHistorialDto
-                {
-                    Id = v.Id,
-                    Fecha = v.Fecha,
-                    Total = v.Total,
-                    MetodoPago = (Panaderia.Shared.Enums.MetodoDePago)(int)v.MetodoPago,
 
-                Detalles = v.Detalles.Select(d => new DetalleVentaHistorialDto
-                    {
-                        ProductoId = d.ProductoId,
-                        Cantidad = d.Cantidad,
-                        Producto = d.Producto.Nombre,
-                        PrecioUnitario = d.PrecioUnitario,
-                        Subtotal = d.Subtotal,
-                        
-                    }).ToList()
-                }).ToList();
+            var query = SpecificationEvaluator<Venta>
+                .GetQuery(_context.Ventas.AsQueryable(), spec);
+
+            query = query
+                .Include(v => v.Detalles)
+                .ThenInclude(d => d.Producto);
+
+            query = AplicarFiltroFechas(query, desde, hasta);
+
+            pagina ??= 1;
+
+            query = query
+                .Skip((pagina.Value - 1) * 10)
+                .Take(10);
+
+            var ventas = await query.ToListAsync();
+
+            return MapearVentas(ventas);
+        }
+        public async Task<List<VentaHistorialDto>> HistorialVentas(ReporteFiltroDto filtro)
+        {
+            var query = _context.Ventas.Include(v => v.Detalles).ThenInclude(d => d.Producto).AsQueryable();
+
+            query = AplicarFiltroFechas(
+                query,
+                filtro.Desde,
+                filtro.Hasta);
+
+            var ventas = await query
+                .OrderByDescending(x => x.Fecha)
+                .ToListAsync();
+
+            return MapearVentas(ventas);
         }
 
         public async Task<bool> VentaRealizada(VentaDto dto)
@@ -121,6 +129,39 @@ namespace Panaderia.Application.Services
                 return false;
             }
             
+        }
+
+        //Solamente mapeo para no repetir codigo con los metodos de Historial
+        private List<VentaHistorialDto> MapearVentas(List<Venta> ventas)
+        {
+            return ventas.Select(v => new VentaHistorialDto
+            {
+                Id = v.Id,
+                Fecha = v.Fecha,
+                Total = v.Total,
+                MetodoPago = (Panaderia.Shared.Enums.MetodoDePago)(int)v.MetodoPago,
+
+                Detalles = v.Detalles.Select(d => new DetalleVentaHistorialDto
+                {
+                    ProductoId = d.ProductoId,
+                    Cantidad = d.Cantidad,
+                    Producto = d.Producto.Nombre,
+                    PrecioUnitario = d.PrecioUnitario,
+                    Subtotal = d.Subtotal
+                }).ToList()
+
+            }).ToList();
+        }
+        //Filtrado de fehcas, lo mismo para no repetir 
+        private IQueryable<Venta> AplicarFiltroFechas(IQueryable<Venta> query,DateTime? desde,DateTime? hasta)
+        {
+            if (desde.HasValue)
+                query = query.Where(x => x.Fecha >= desde.Value);
+
+            if (hasta.HasValue)
+                query = query.Where(x => x.Fecha <= hasta.Value);
+
+            return query;
         }
     }
 }

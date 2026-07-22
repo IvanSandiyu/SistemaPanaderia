@@ -1,8 +1,11 @@
 ﻿@page "/productos"
 @using Panaderia.Shared.DTOs.Productos
 @using Panaderia.Blazor.Services
+@using Panaderia.Shared.DTOs.Reportes
 
 @inject ProductoService ProductoService
+@inject ReporteService ReporteService
+@inject IJSRuntime JS
 @inject NavigationManager Navigation
 
 <div class="container-fluid">
@@ -15,19 +18,30 @@
                 Productos
             </h2>
 
-
             <small class="text-muted">
                 Gestión de productos y stock
             </small>
         </div>
 
-        <button class="btn btn-primary"
-                @onclick="Crear">
+        <div class="d-flex gap-2">
 
-            <i class="bi bi-plus-circle me-2"></i>
-            Nuevo Producto
+            <button class="btn btn-outline-success"
+                    @onclick="AbrirModalReporte">
 
-        </button>
+                <i class="bi bi-file-earmark-arrow-down me-2"></i>
+                Exportar
+
+            </button>
+
+            <button class="btn btn-primary"
+                    @onclick="Crear">
+
+                <i class="bi bi-plus-circle me-2"></i>
+                Nuevo Producto
+
+            </button>
+
+        </div>
 
     </div>
 
@@ -162,6 +176,118 @@
     </div>
 
 </div>
+@if (MostrarModalReporte) {
+    <div class="modal fade show d-block"
+         tabindex="-1"
+         style="background-color:rgba(0,0,0,.5);">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        <i class="bi bi-file-earmark-arrow-down me-2"></i>
+
+                        Exportar Reporte
+
+                    </h5>
+
+                    <button class="btn-close"
+                            @onclick="CerrarModalReporte">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="alert alert-info">
+
+                        <strong>Acceso rápido</strong>
+
+                        <hr />
+
+                        <button class="btn btn-success w-100"
+                                @onclick="ExportarHoy">
+
+                            <i class="bi bi-calendar-check me-2"></i>
+
+                            Exportar ventas del día
+                            <br />
+
+                            <small>
+                                08:00 hs - 21:00 hs
+                            </small>
+
+                        </button>
+
+                    </div>
+
+                   @*  <hr />
+
+                    <h6>Rango personalizado</h6>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label>Desde</label>
+
+                            <InputDate class="form-control"
+                                       @bind-Value="FechaDesde" />
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label>Hasta</label>
+
+                            <InputDate class="form-control"
+                                       @bind-Value="FechaHasta" />
+
+                        </div>
+
+                    </div> *@
+
+                </div>
+
+                @* <div class="modal-footer">
+
+                    <button class="btn btn-secondary"
+                            @onclick="CerrarModalReporte">
+
+                        Cancelar
+
+                    </button>
+
+                    <button class="btn btn-danger"
+                            @onclick="ExportarPdf">
+
+                        <i class="bi bi-file-earmark-pdf me-2"></i>
+
+                        PDF
+
+                    </button>
+
+                    <button class="btn btn-success"
+                            @onclick="ExportarExcel">
+
+                        <i class="bi bi-file-earmark-excel me-2"></i>
+
+                        Excel
+
+                    </button>
+
+                </div> *@
+
+            </div>
+
+        </div>
+
+    </div>
+}
 
 @code {
 
@@ -181,13 +307,64 @@
     {
         Navigation.NavigateTo("/productos/nuevo");
     }
+
+    private bool MostrarModalReporte;
+
+    // private DateTime? FechaDesde = DateTime.Today;
+
+    // private DateTime? FechaHasta = DateTime.Today;
+
+    private void AbrirModalReporte()
+    {
+        MostrarModalReporte = true;
+    }
+
+    private void CerrarModalReporte()
+    {
+        MostrarModalReporte = false;
+    }
+
+    private async Task ExportarHoy()
+    {
+        var pdf = await ReporteService.ExportarProductosPdf();
+
+        var base64 = Convert.ToBase64String(pdf);
+
+        await JS.InvokeVoidAsync(
+            "downloadFile",
+            "ReporteProductos.pdf",
+            "application/pdf",
+            base64);
+
+    }
+    // private async Task ExportarPdf()
+    // {
+    //     var desde = FechaDesde?.Date;
+
+    //     var hasta = FechaHasta?.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+
+    //     //Llamar al endpoint PDF
+
+    //     MostrarModalReporte = false;
+    // }
+    // private async Task ExportarExcel()
+    // {
+    //     var desde = FechaDesde?.Date;
+
+    //     var hasta = FechaHasta?.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+
+    //     //Llamar al endpoint Excel
+
+    //     MostrarModalReporte = false;
+    // }
+   
+
+
     private string Busqueda = "";
 
     private IEnumerable<ProductoDTO> ProductosFiltrados =>
-        string.IsNullOrWhiteSpace(Busqueda)
-            ? productos
-            : productos.Where(x =>
-                x.Nombre.Contains(
-                    Busqueda,
-                    StringComparison.OrdinalIgnoreCase));
+     string.IsNullOrWhiteSpace(Busqueda)
+         ? productos ?? Enumerable.Empty<ProductoDTO>()
+         : (productos ?? Enumerable.Empty<ProductoDTO>())
+             .Where(x => x.Nombre.Contains(Busqueda, StringComparison.OrdinalIgnoreCase));
 }
