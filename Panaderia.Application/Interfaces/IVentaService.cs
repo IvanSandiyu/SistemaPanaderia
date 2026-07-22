@@ -1,4 +1,5 @@
 ﻿using Panaderia.Domain.Entidades;
+using Panaderia.Shared.DTOs.Reportes;
 using Panaderia.Shared.DTOs.Ventas;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace Panaderia.Application.Interfaces
     {
         public Task<bool> VentaRealizada(VentaDto productos);
         public Task<List<VentaHistorialDto>> HistorialVentas(DateTime? desde, DateTime? hasta, int? pagina);
+        public Task<List<VentaHistorialDto>> HistorialVentas(ReporteFiltroDto filtro);
     }
 }

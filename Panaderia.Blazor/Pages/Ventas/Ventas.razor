@@ -1,12 +1,15 @@
 ﻿@page "/ventas"
 @using Panaderia.Blazor.Models
 @using Panaderia.Shared.DTOs.Productos
+@using Panaderia.Shared.DTOs.Reportes
 @using Panaderia.Shared.DTOs.Ventas
 @using Panaderia.Blazor.Services
 @using Panaderia.Shared.Enums
 
 @inject ProductoService ProductoService
 @inject VentaService VentaService
+@inject IJSRuntime JS
+@inject ReporteService ReporteService
 
 <h3>Ventas</h3>
 
@@ -15,7 +18,8 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
-            <h2>
+
+            <h2 class="mb-0">
                 <i class="bi bi-cart-check-fill me-2"></i>
                 Nueva Venta
             </h2>
@@ -23,9 +27,18 @@
             <small class="text-muted">
                 Registrar venta y actualizar stock
             </small>
+
         </div>
 
-    </div>
+        <button class="btn btn-outline-success"
+                @onclick="ExportarVentasHoy">
+
+            <i class="bi bi-file-earmark-arrow-down me-2"></i>
+            Ventas del día
+
+        </button>
+
+    </div>  
 
     <div class="col-lg-8">
 
@@ -420,7 +433,7 @@
 
     private List<CarritoItemDto> Carrito = new();
     private bool MostrarModalPago = false;
-    
+
     private string Observaciones = "";
 
     private decimal? Total => Carrito.Sum(x => x.Subtotal);
@@ -527,7 +540,7 @@
                 Cantidad = x.Cantidad,
                 PrecioUnitario = x.PrecioUnitario ?? 0,
                 TipoVenta = x.TipoVenta
-                
+
             }).ToList()
         };
 
@@ -562,6 +575,23 @@
     private void CerrarModal()
     {
         MostrarModalPago = false;
+    }
+    private DateTime? Desde;
+    private DateTime? Hasta;
+    private async Task ExportarVentasHoy()
+    {
+        Desde = DateTime.Today.AddHours(8);
+        Hasta = DateTime.Today.AddHours(21);
+
+        var pdf = await ReporteService.ExportarVentasPdf(Desde,Hasta);
+
+        var base64 = Convert.ToBase64String(pdf);
+
+        await JS.InvokeVoidAsync(
+            "downloadFile",
+            "ReporteVentas.pdf",
+            "application/pdf",
+            base64);
     }
 
 }

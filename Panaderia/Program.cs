@@ -3,6 +3,8 @@ using Panaderia.Application.Interfaces;
 using Panaderia.Application.Services;
 using Panaderia.Infrastructure.EntityFramework;
 using Panaderia.WebApi.Endpoints;
+using Panaderia.Infrastructure.Reporting;
+using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,8 @@ builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
+builder.Services.AddReporting();
+
 
 
 

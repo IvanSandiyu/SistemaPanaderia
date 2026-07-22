@@ -14,6 +14,7 @@ builder.Services.AddScoped<ProductoService>();
 builder.Services.AddScoped<VentaService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<ProveedorService>();
+builder.Services.AddScoped<ReporteService>();
 builder.Services.AddApexCharts();
 
 
