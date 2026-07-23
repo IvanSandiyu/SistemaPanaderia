@@ -1,6 +1,7 @@
 ﻿using Panaderia.Application.Interfaces;
 using Panaderia.Domain.Entidades.Productos;
 using Panaderia.Shared.DTOs.Productos;
+using Panaderia.Shared.DTOs.Proveedores;
 using Panaderia.Shared.DTOs.Ventas;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -129,6 +130,11 @@ namespace Panaderia.Infrastructure.Reporting
             });
 
             return document.GeneratePdf();
+        }
+
+        public byte[] GenerarReporteProveedores(List<ProveedorDTO>? proveedores)
+        {
+            throw new NotImplementedException();
         }
     }
 

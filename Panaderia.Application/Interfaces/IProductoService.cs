@@ -12,7 +12,7 @@ namespace Panaderia.Application.Interfaces
     {
         Task<Producto> ObtenerPorIdAsync(int id);
 
-        Task<List<Producto>> ObtenerTodosAsync();
+        Task<List<Producto>> ObtenerTodosAsync(int? pag=null);
 
         Task<bool> CrearAsync(ProductoDTO dto);
 

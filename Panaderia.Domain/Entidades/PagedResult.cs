@@ -11,5 +11,6 @@ namespace Panaderia.Domain.Entidades
         public List<T> Items { get; set; } = [];
         public int TotalRegistros { get; set; }
         public int PaginaActual { get; set; }
+        public int TotalPaginas { get; set; }
     }
 }

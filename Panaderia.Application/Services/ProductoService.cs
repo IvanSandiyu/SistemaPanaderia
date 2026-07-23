@@ -110,11 +110,19 @@ namespace Panaderia.Application.Services
             return await _context.Productos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<List<Producto>> ObtenerTodosAsync()
+        public async Task<List<Producto>> ObtenerTodosAsync(int? pag)
         {
-            List<Producto> productos;
-            productos = await _context.Productos.AsNoTracking().ToListAsync();
-            return productos;
+            var query = _context.Productos.AsQueryable();
+
+            if (pag.HasValue) {
+                const int pageSize = 10;
+
+                query = query
+                    .Skip((pag.Value - 1) * pageSize)
+                    .Take(pageSize);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<bool> OcultarProducto(int id)

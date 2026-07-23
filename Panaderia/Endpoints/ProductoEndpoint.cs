@@ -18,9 +18,7 @@ namespace Panaderia.WebApi.Endpoints
             stockGroup.MapGet("/{id:int}", ProductoPorCodigo)
                .WithOpenApi();
 
-            stockGroup.MapGet("/productos", VerProductos)
-               .WithName("productos")
-               .WithOpenApi();
+            stockGroup.MapGet("/productos", VerProductos);
 
             stockGroup.MapPost("/crearproductos", CrearProducto)
                .WithName("crearProductos")
@@ -32,6 +30,8 @@ namespace Panaderia.WebApi.Endpoints
 
             stockGroup.MapPut("/{id:int}", OcultarProducto)
                .WithOpenApi();
+
+           
         }
         
         public async Task<IResult> CrearProducto([FromBody] ProductoDTO dto, IProductoService _service)
@@ -49,17 +49,13 @@ namespace Panaderia.WebApi.Endpoints
 
         }
 
-        public async Task<IResult> VerProductos(IProductoService _service)
+        public async Task<IResult> VerProductos(IProductoService service,int? pagina)
         {
-            try {
-                var productos = await _service.ObtenerTodosAsync();
+            var productos = await service.ObtenerTodosAsync(pagina);
 
-                return Results.Ok(productos);
-            } catch (Exception ex) {
-                return Results.Problem(ex.Message);
-            }
+            return Results.Ok(productos);
         }
-        
+
         public async Task<IResult> ProductoPorCodigo(int id, IProductoService _service)
         {
             try {

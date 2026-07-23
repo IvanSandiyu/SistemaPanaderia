@@ -19,7 +19,11 @@ namespace Panaderia.WebApi.Endpoints
             ventaGroup.MapGet("/historialventas/{pagina:int}", HistorialVentas)
                 .WithName("historialVentas")
                 .WithOpenApi();
+
+            ventaGroup.MapGet("/ventas/{pag:int}", ListaVentas);
         }
+
+       
         //Cambiar A results(bad request,ok,etc)
         public async Task<IResult> GenerarVenta(VentaDto venta, IVentaService _service)
         {
@@ -45,6 +49,13 @@ namespace Panaderia.WebApi.Endpoints
                 return Results.Problem(ex.Message);
             }
             
+        }
+
+        private async Task<IResult> ListaVentas(int? pag,IVentaService _service)
+        {
+            var ventas = await _service.ListaVentas(pag);
+
+            return Results.Ok(ventas);
         }
     }
 }
