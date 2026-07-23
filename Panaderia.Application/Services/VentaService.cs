@@ -163,5 +163,24 @@ namespace Panaderia.Application.Services
 
             return query;
         }
+
+        public async Task<List<VentaHistorialDto>> ListaVentas(int? pag = null)
+        {
+            var query = _context.Ventas
+                .Include(v => v.Detalles)
+                .ThenInclude(d => d.Producto)
+                .AsQueryable();
+
+            if (pag.HasValue) {
+                const int pageSize = 10;
+
+                query = query
+                    .Skip((pag.Value - 1) * pageSize)
+                    .Take(pageSize);
+            }
+
+            var ventas = await query.ToListAsync();
+            return MapearVentas(ventas);
+        }
     }
 }

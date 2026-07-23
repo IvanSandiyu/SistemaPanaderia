@@ -19,6 +19,17 @@ namespace Panaderia.Blazor.Services
                 "api/stock/productos")
                 ?? new();
         }
+        public async Task<List<ProductoDTO>> ObtenerTodos(int? pag = null)
+        {
+            string url = "api/stock/productos";
+
+            if (pag.HasValue)
+                url += $"?pagina={pag}";
+
+            return await _http.GetFromJsonAsync<List<ProductoDTO>>(url)
+                   ?? new();
+        }
+
 
         public async Task<ProductoDTO> ObtenerPorId(int id)
         {
