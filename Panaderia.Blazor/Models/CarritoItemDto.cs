@@ -1,4 +1,4 @@
-﻿using Panaderia.Shared.Enums;
+﻿using Panaderia.Domain.Entidades.Enums;
 
 namespace Panaderia.Blazor.Models
 {
@@ -6,7 +6,7 @@ namespace Panaderia.Blazor.Models
     {
         public int Id { get; set; }
 
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = string.Empty;
 
         public decimal PrecioVenta { get; set; }
 

@@ -1,5 +1,4 @@
-﻿using Panaderia.Shared.Enums;
-using Panaderia.Shared.Ventas;
+﻿using Panaderia.Domain.Entidades.Enums;
 
 namespace Panaderia.Shared.DTOs.Ventas
 {

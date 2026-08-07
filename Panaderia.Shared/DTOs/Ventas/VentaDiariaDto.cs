@@ -1,4 +1,4 @@
-﻿namespace Panaderia.Shared.Ventas
+﻿namespace Panaderia.Shared.DTOs.Ventas
 {
     public class VentaDiariaDto
     {

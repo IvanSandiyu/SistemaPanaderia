@@ -274,7 +274,7 @@
     private ProductoDTO Producto = new();
     private List<ProveedorDTO> listaProveedores = new();
     private ProveedorDTO Proveedor = new();
-    private string Mensaje { get; set; }
+    private string Mensaje { get; set; } = string.Empty;
     private bool MostrarMensaje { get; set; } = false;
     private decimal? PrecioVentaCalculado => Producto.PorcentajeGanancia > 0 ? Producto.PrecioCompra *(1 + Producto.PorcentajeGanancia / 100m): Producto.PrecioVenta;
     

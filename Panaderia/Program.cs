@@ -6,11 +6,11 @@ using Panaderia.WebApi.Endpoints;
 using Panaderia.Infrastructure.Reporting;
 using Microsoft.Extensions.DependencyInjection;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddDbContext<PanaderiaDbContext>(options =>
     options.UseSqlServer(
@@ -24,9 +24,6 @@ builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddReporting();
-
-
-
 
 //Habilitamos el CORS
 builder.Services.AddCors(options =>
@@ -43,7 +40,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
 app.UseHttpsRedirection();
+app.UseExceptionHandler();
 app.UseCors("BlazorPolicy");
 
 if (app.Environment.IsDevelopment()) {

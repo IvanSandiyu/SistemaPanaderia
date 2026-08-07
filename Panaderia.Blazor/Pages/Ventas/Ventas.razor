@@ -4,7 +4,7 @@
 @using Panaderia.Shared.DTOs.Reportes
 @using Panaderia.Shared.DTOs.Ventas
 @using Panaderia.Blazor.Services
-@using Panaderia.Shared.Enums
+@using Panaderia.Domain.Entidades.Enums
 
 @inject ProductoService ProductoService
 @inject VentaService VentaService
@@ -289,6 +289,7 @@
                                 <th>Producto</th>
                                 <th>Cant.</th>
                                 <th>Subtotal</th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -308,6 +309,15 @@
                                     <td>
                                         @* $ @((item.Cantidad * item.PrecioUnitario)?.ToString("N2")) *@
                                         $ @item.Subtotal?.ToString("N2")
+                                    </td>
+
+                                    <td>
+                                        <button class="btn btn-outline-danger btn-sm"
+                                                title="Quitar del carrito"
+                                                @onclick="() => EliminarDelCarrito(item)">
+
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
                                     </td>
 
                                 </tr>
@@ -338,16 +348,22 @@
                             Carrito
                         </h5>
 
-                        <button class="btn btn-sm btn-light"
-                                @onclick="LimpiarCarrito">
+                        <div class="d-flex gap-2">
 
-                            <i class="bi bi-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-light"
-                                @onclick="AbrirModalPago">
+                            <button class="btn btn-sm btn-light"
+                                    title="Vaciar carrito"
+                                    @onclick="LimpiarCarrito">
 
-                            <i class="bi bi-currency-dollar"></i>
-                        </button>
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <button class="btn btn-sm btn-light"
+                                    title="Ir al pago"
+                                    @onclick="AbrirModalPago">
+
+                                <i class="bi bi-currency-dollar"></i>
+                            </button>
+
+                        </div>
 
                     </div>
                 }
@@ -487,7 +503,7 @@
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 PrecioUnitario = producto.PrecioVentaUnidad ?? 0,
-                PrecioAplicado = producto.PrecioVentaUnidad.Value ,
+                PrecioAplicado = producto.PrecioVentaUnidad ?? 0,
                 Cantidad = 1,
                 TipoVenta = TipoVenta.Unidad
             });
@@ -502,7 +518,7 @@
         if (montoIngresado <= 0)
             return;
 
-        decimal? cantidadKg = Math.Round(montoIngresado / producto.PrecioVenta.Value,2);
+        decimal? cantidadKg = Math.Round(montoIngresado / (producto.PrecioVenta ?? 0),2);
 
         var item = Carrito.FirstOrDefault(x => x.Id == producto.Id && x.TipoVenta == TipoVenta.Monto);
 
@@ -511,7 +527,7 @@
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 Cantidad = cantidadKg,
-                PrecioAplicado = producto.PrecioVenta.Value,
+                PrecioAplicado = producto.PrecioVenta ?? 0,
                 TipoVenta = TipoVenta.Monto
             });
         } else {
@@ -530,7 +546,7 @@
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 Cantidad = kilos,
-                PrecioAplicado =producto.PrecioVenta.Value,
+                PrecioAplicado = producto.PrecioVenta ?? 0,
                 TipoVenta = TipoVenta.Peso
             });
         } else {
@@ -538,13 +554,9 @@
         }
     }
 
-    private void EliminarDelCarrito(int id)
+    private void EliminarDelCarrito(CarritoItemDto item)
     {
-        var item = Carrito.FirstOrDefault(x => x.Id == id);
-        if(item is not null){
-            Carrito.Remove(item);
-            item.Cantidad--;
-        }
+        Carrito.Remove(item);
     }
     private MetodoDePago MetodoPagoSeleccionado = MetodoDePago.Efectivo;
     private async Task RealizarPago()

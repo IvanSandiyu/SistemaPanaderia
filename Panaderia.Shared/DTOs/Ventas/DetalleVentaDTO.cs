@@ -1,4 +1,4 @@
-﻿using Panaderia.Shared.Enums;
+﻿using Panaderia.Domain.Entidades.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

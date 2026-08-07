@@ -1,10 +1,5 @@
 ﻿
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Panaderia.Application.Interfaces;
-using Panaderia.Shared.DTOs.Productos;
-using Panaderia.Shared.Ventas;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace Panaderia.WebApi.Endpoints
 {
@@ -32,74 +27,42 @@ namespace Panaderia.WebApi.Endpoints
 
             dashGroup.MapGet("/ganancias", Ganancias)
                 .WithOpenApi();
-
-
         }
 
-        private async Task<IResult> VentasDiarias(IDashboardService service)
+        public async Task<IResult> VentasDiarias(IDashboardService service)
         {
-            try {
-                var response = await service.VentasDiarias();
-                return Results.Ok(response);
-            } catch (Exception ex) {
-                return Results.Problem(ex.Message);
-            }
-
-            
-            
+            var response = await service.VentasDiarias();
+            return Results.Ok(response);
         }
 
         public async Task<IResult> MasVendidos(IDashboardService service)
         {
-            try {
-                var lista = await service.ProductosMasVendidos();
-                return Results.Ok(lista);
-
-            }
-            catch (Exception ex) {
-                return Results.Problem(ex.Message);
-            }
-            
+            var lista = await service.ProductosMasVendidos();
+            return Results.Ok(lista);
         }
 
         public async Task<IResult> MetodoPago(IDashboardService service)
         {
-            try {
-                var metodos = await service.MetodoDePago();
-                return Results.Ok(metodos);
-            } 
-            catch(Exception ex) {
-                return Results.Problem(ex.Message);
-            }
-            
+            var metodos = await service.MetodoDePago();
+            return Results.Ok(metodos);
         }
 
         public async Task<IResult> VentasHoy(IDashboardService service)
         {
-            try {
-                var metodos = await service.VentasDiarias();
-                return Results.Ok(metodos);
-            } catch (Exception ex) {
-                return Results.Problem(ex.Message);
-            }
-            
+            var ventasHoy = await service.VentasHoy();
+            return Results.Ok(ventasHoy);
         }
 
         public async Task<IResult> MasVendidosPorDia(IDashboardService service)
         {
-            try {
-                var metodos = await service.VentasPorDia();
-                return Results.Ok(metodos);
-            }
-            catch(Exception ex) {
-                return Results.Problem(ex.Message); 
-            }
+            var metodos = await service.VentasPorDia();
+            return Results.Ok(metodos);
         }
 
-        public async Task<decimal?> Ganancias(IDashboardService service)
+        public async Task<IResult> Ganancias(IDashboardService service)
         {
             var ganancia = await service.Ganancias();
-            return ganancia;
+            return Results.Ok(ganancia);
         }
     }
 }

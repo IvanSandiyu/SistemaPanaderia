@@ -246,9 +246,12 @@
     protected override async Task OnInitializedAsync()
     {
         Producto = await ProductoService.ObtenerPorId(Id);
-        Proveedor = await ProveedorService.ObtenerPorId(Producto.ProveedorId);
-        listaProveedores = await ProveedorService.ObtenerTodos();
 
+        if (Producto.ProveedorId is > 0) {
+            Proveedor = await ProveedorService.ObtenerPorId(Producto.ProveedorId.Value);
+        }
+
+        listaProveedores = await ProveedorService.ObtenerTodos();
     }
 
     private async Task Guardar()

@@ -1,5 +1,5 @@
 ﻿using Panaderia.Shared.DTOs.Productos;
-using Panaderia.Shared.Ventas;
+using Panaderia.Shared.DTOs.Ventas;
 using System.Net.Http.Json;
 
 namespace Panaderia.Blazor.Services

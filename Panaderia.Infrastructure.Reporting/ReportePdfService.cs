@@ -73,7 +73,7 @@ namespace Panaderia.Infrastructure.Reporting
             return document.GeneratePdf();
         }
 
-        public byte[] GenerarReporteProductos(List<ProductoDTO>? productos)
+        public byte[] GenerarReporteProductos(List<ProductoDTO> productos)
         {
             QuestPDF.Settings.License = LicenseType.Community;
 
@@ -112,7 +112,7 @@ namespace Panaderia.Infrastructure.Reporting
 
                                 item.Item().Text($"Precio Venta Unidad: ${producto.PrecioVentaUnidad:N2}");
 
-                                item.Item().Text($"Stock: {producto.StockActual}");
+                                item.Item().Text($"Stock: {producto.StockActual:N2}");
 
                                 //item.Item().Text($"Proveedor: {producto.Proveedor?.Nombre ?? "Sin proveedor"}");
                             });
@@ -132,9 +132,63 @@ namespace Panaderia.Infrastructure.Reporting
             return document.GeneratePdf();
         }
 
-        public byte[] GenerarReporteProveedores(List<ProveedorDTO>? proveedores)
+        public byte[] GenerarReporteProveedores(List<ProveedorDTO> proveedores)
         {
-            throw new NotImplementedException();
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Margin(30);
+
+                    page.Header()
+                        .Text("REPORTE DE PROVEEDORES")
+                        .FontSize(24)
+                        .Bold()
+                        .AlignCenter();
+
+                    page.Content().Column(col =>
+                    {
+                        col.Spacing(10);
+
+                        col.Item().Text($"Fecha de generación: {DateTime.Now:dd/MM/yyyy HH:mm}");
+
+                        col.Item().Text($"Cantidad de proveedores: {proveedores.Count}");
+
+                        col.Item().LineHorizontal(1);
+
+                        foreach (var proveedor in proveedores) {
+                            col.Item().Border(1).Padding(10).Column(item =>
+                            {
+                                item.Item().Text(proveedor.Nombre).Bold();
+
+                                item.Item().Text($"ID: {proveedor.Id}");
+
+                                item.Item().Text($"CUIT: {proveedor.Cuit}");
+
+                                item.Item().Text($"Teléfono: {proveedor.Telefono}");
+
+                                item.Item().Text($"Email: {proveedor.Email}");
+
+                                item.Item().Text($"Dirección: {proveedor.Direccion}");
+
+                                item.Item().Text($"Estado: {(proveedor.Activo ? "Activo" : "Inactivo")}");
+                            });
+                        }
+                    });
+
+                    page.Footer()
+                        .AlignCenter()
+                        .Text(x =>
+                        {
+                            x.Span("Página ");
+                            x.CurrentPageNumber();
+                        });
+                });
+            });
+
+            return document.GeneratePdf();
         }
     }
 

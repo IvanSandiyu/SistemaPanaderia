@@ -1,11 +1,11 @@
-﻿using Panaderia.Application.DTOs.Dashboard;
+﻿using Panaderia.Shared.DTOs.Dashboard;
 using Panaderia.Shared.DTOs.Productos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Panaderia.Shared.Ventas;
+using Panaderia.Shared.DTOs.Ventas;
 
 namespace Panaderia.Application.Interfaces
 {
@@ -17,6 +17,7 @@ namespace Panaderia.Application.Interfaces
         Task<List<ProductoMasVendidoDto>> ProductosMenosVendidos();
 
         Task<List<VentaDiariaDto>> VentasDiarias();
+        Task<decimal> VentasHoy();
         Task<List<MetodoPagoDto>> MetodoDePago();
         Task<decimal?> Ganancias();
 
