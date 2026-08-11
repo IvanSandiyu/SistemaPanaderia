@@ -81,12 +81,11 @@ El proyecto está construido utilizando:
 ## Próximas funcionalidades:
 - Autenticación JWT
 - Login de usuarios
-- Gestión de clientes
-- Gestión de proveedores ( en curso )
+- Gestión de proveedores ✅
 - Reportes avanzados
-- Exportación a PDF/Excel
-- Alertas de stock bajo
-- Búsqueda optimizada desde backend
+- Exportación a PDF/Excel ✅
+- Alertas de stock bajo ✅
+- Búsqueda optimizada desde backend ✅
 
 ## Objetivo
 Este proyecto fue desarrollado como práctica de arquitectura empresarial en .NET aplicando buenas prácticas de diseño y patrones modernos
