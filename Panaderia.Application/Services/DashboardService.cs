@@ -21,19 +21,22 @@ namespace Panaderia.Application.Services
 
         public async Task<List<DetalleVentaHistorialDto>> VentasPorDia()
         {
+            var hoy = DateTime.Today;
 
-            return await _context.DetalleVentas.GroupBy(x => new
-            {
-                x.ProductoId,
-                x.Producto.Nombre
-            }).Select(g => new DetalleVentaHistorialDto
-            {
-                ProductoId = g.Key.ProductoId,
-                Producto = g.Key.Nombre,
-                Cantidad = g.Sum(x => x.Cantidad),
-                PrecioUnitario = g.Average(x => x.PrecioUnitario),
-                Subtotal = g.Sum(x => x.Subtotal)
-            }).OrderByDescending(x => x.Cantidad).ToListAsync();
+            return await _context.DetalleVentas
+                .Where(x => x.Venta.Fecha.Date == hoy)
+                .GroupBy(x => new
+                {
+                    x.ProductoId,
+                    x.Producto.Nombre
+                }).Select(g => new DetalleVentaHistorialDto
+                {
+                    ProductoId = g.Key.ProductoId,
+                    Producto = g.Key.Nombre,
+                    Cantidad = g.Sum(x => x.Cantidad),
+                    PrecioUnitario = g.Average(x => x.PrecioUnitario),
+                    Subtotal = g.Sum(x => x.Subtotal)
+                }).OrderByDescending(x => x.Cantidad).ToListAsync();
         }
 
         public async Task<List<MetodoPagoDto>> MetodoDePago()

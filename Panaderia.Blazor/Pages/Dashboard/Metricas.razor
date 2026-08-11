@@ -206,7 +206,7 @@
         RecaudacionHoy = listaVendidos.Where(x => x.Fecha.Date == DateTime.Today).Sum(x => x.Total ?? 0);
 
         listaProductosVendidos = await DashboardService.ProductoMasVendidoDiario();
-        ContProductos =listaProductosVendidos.Sum(x => x.Cantidad ?? 0);
+        ContProductos = listaProductosVendidos.Sum(x => x.Cantidad ?? 0);
 
         Ganancias = await DashboardService.Ganancias() ?? 0;
 
