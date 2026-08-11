@@ -10,7 +10,7 @@ namespace Panaderia.Application.Interfaces
 {
     public interface IProductoService
     {
-        Task<Producto> ObtenerPorIdAsync(int id);
+        Task<Producto?> ObtenerPorIdAsync(int id);
 
         Task<List<Producto>> ObtenerTodosAsync(int? pag=null);
 

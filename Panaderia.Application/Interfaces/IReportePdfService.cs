@@ -12,7 +12,7 @@ namespace Panaderia.Application.Interfaces
     public interface IReportePdfService
     {
         byte[] GenerarReporteVentas(List<VentaHistorialDto> ventas);
-        byte[] GenerarReporteProductos(List<ProductoDTO>? productos);
-        byte[] GenerarReporteProveedores(List<ProveedorDTO>? proveedores);
+        byte[] GenerarReporteProductos(List<ProductoDTO> productos);
+        byte[] GenerarReporteProveedores(List<ProveedorDTO> proveedores);
     }
 }

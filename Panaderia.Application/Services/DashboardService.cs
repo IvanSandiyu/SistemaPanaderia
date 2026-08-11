@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Panaderia.Application.DTOs.Dashboard;
 using Panaderia.Application.Interfaces;
+using Panaderia.Shared.DTOs.Dashboard;
 using Panaderia.Shared.DTOs.Productos;
-using Panaderia.Shared.Ventas;
+using Panaderia.Shared.DTOs.Ventas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,6 +91,15 @@ namespace Panaderia.Application.Services
             }).OrderByDescending(x => x.Fecha).ToListAsync();
 
             return ventasPorDia;
+        }
+
+        public async Task<decimal> VentasHoy()
+        {
+            var hoy = DateTime.Today;
+
+            return await _context.Ventas
+                .Where(x => x.Fecha.Date == hoy)
+                .SumAsync(x => x.Total ?? 0);
         }
 
         public async Task<decimal?> Ganancias()

@@ -14,6 +14,6 @@ namespace Panaderia.Application.Interfaces
         Task<bool> CrearProveedor(ProveedorDTO dto);
         Task<bool> EditarProveedor(int id,ProveedorDTO dto);
         Task<bool> EstadoProveedor(int id);
-        Task<ProveedorDTO> ObtenerPorId(int id);
+        Task<ProveedorDTO?> ObtenerPorId(int id);
     }
 }

@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Panaderia.Application.Interfaces;
-using Panaderia.Domain.Entidades.Proveedores;
 using Panaderia.Shared.DTOs.Proveedores;
 
 namespace Panaderia.WebApi.Endpoints
@@ -31,46 +30,26 @@ namespace Panaderia.WebApi.Endpoints
 
         public async Task<IResult> ObtenerTodos(IProveedorService service)
         {
-            try {
-                var response = await service.ObtenerTodos();
-                return Results.Ok(response);
-            } catch(Exception ex) {
-                return Results.Problem(ex.Message);
-            }
+            var response = await service.ObtenerTodos();
+            return Results.Ok(response);
         }
 
-       public async Task<IResult> CrearProveedor([FromBody] ProveedorDTO dto,IProveedorService service)
+        public async Task<IResult> CrearProveedor([FromBody] ProveedorDTO dto, IProveedorService service)
         {
-            try {
-                var response = await service.CrearProveedor(dto);
-                return Results.Ok(response); 
-            }
-            catch(Exception ex) {
-                return Results.Problem(ex.Message);
-            }
+            var response = await service.CrearProveedor(dto);
+            return Results.Ok(response);
         }
 
         public async Task<IResult> EditarProveedor(int id, ProveedorDTO dto, IProveedorService service)
         {
-            try {
-                var response = await service.EditarProveedor(id, dto);
-                return Results.Ok(response);
-            }
-            catch(Exception ex) {
-                return Results.Problem(ex.Message);
-            }
+            var response = await service.EditarProveedor(id, dto);
+            return Results.Ok(response);
         }
-        
+
         public async Task<IResult> CambiarEstadoProveedor(int id, IProveedorService service)
         {
-            try {
-                var response = await service.EstadoProveedor(id);
-                return Results.Ok(response);
-            }
-            catch(Exception ex) {
-                return Results.Problem(ex.Message);
-            }
-            
+            var response = await service.EstadoProveedor(id);
+            return Results.Ok(response);
         }
 
         public async Task<IResult> ObtenerPorId(int id, IProveedorService service)

@@ -13,11 +13,11 @@ namespace Panaderia.Domain.Entidades.Ventas
 
         public int VentaId { get; set; }
 
-        public Venta Venta { get; set; }
+        public Venta Venta { get; set; } = null!;
 
         public int ProductoId { get; set; }
 
-        public Producto Producto { get; set; }
+        public Producto Producto { get; set; } = null!;
 
         public decimal? Cantidad { get; set; }
 

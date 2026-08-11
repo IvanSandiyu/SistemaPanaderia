@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Panaderia.Shared.Ventas;
+using Panaderia.Shared.DTOs.Ventas;
 using Panaderia.Shared.DTOs.Productos;
 
 namespace Panaderia.Shared.DTOs.Dashboard
@@ -20,10 +20,10 @@ namespace Panaderia.Shared.DTOs.Dashboard
 
         public decimal TicketPromedio { get; set; }
 
-        public List<VentaDiariaDto> VentasDiarias { get; set; }
+        public List<VentaDiariaDto> VentasDiarias { get; set; } = [];
 
-        public List<ProductoMasVendidoDto> ProductosMasVendidos { get; set; }
+        public List<ProductoMasVendidoDto> ProductosMasVendidos { get; set; } = [];
 
-        public List<MetodoPagoDto> MetodosPago { get; set; }
+        public List<MetodoPagoDto> MetodosPago { get; set; } = [];
     }
 }

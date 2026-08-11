@@ -33,8 +33,9 @@ namespace Panaderia.Application.Services
             p.Nombre = dto.Nombre;
             p.PrecioCompra = dto.PrecioCompra;
             p.StockActual = dto.StockActual;
-            p.Activo = dto.Activo;
-            p.ProveedorId = dto.ProveedorId;
+            if (dto.Activo.HasValue)
+                p.Activo = dto.Activo;
+            p.ProveedorId = NormalizarProveedor(dto.ProveedorId);
 
 
             if (dto.PorcentajeGanancia > 0) {
@@ -73,10 +74,10 @@ namespace Panaderia.Application.Services
             var producto = new Producto {
                 Nombre = dto.Nombre,
                 StockActual = dto.StockActual,
-                Activo = dto.Activo,
+                Activo = dto.Activo ?? true,
                 PrecioCompra = dto.PrecioCompra,
                 PrecioCompraUnidad = dto.PrecioCompraUnidad,
-                ProveedorId = dto.ProveedorId
+                ProveedorId = NormalizarProveedor(dto.ProveedorId)
             };
             if (dto.PorcentajeGanancia > 0) {
                 producto.PorcentajeGanancia = dto.PorcentajeGanancia;
@@ -105,7 +106,7 @@ namespace Panaderia.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Producto> ObtenerPorIdAsync(int id)
+        public async Task<Producto?> ObtenerPorIdAsync(int id)
         {
             return await _context.Productos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
@@ -140,5 +141,9 @@ namespace Panaderia.Application.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        //Evita violaciones de FK cuando el DTO llega con ProveedorId = 0 ("sin proveedor")
+        private static int? NormalizarProveedor(int? proveedorId)
+            => proveedorId is > 0 ? proveedorId : null;
     }
 }

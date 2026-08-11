@@ -6,11 +6,6 @@ using Panaderia.Domain.Entidades.Enums;
 using Panaderia.Domain.Entidades.Ventas;
 using Panaderia.Shared.DTOs.Reportes;
 using Panaderia.Shared.DTOs.Ventas;
-using Panaderia.Shared.Enums;
-using Panaderia.Shared.Ventas;
-using System.ComponentModel.Design;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Panaderia.Application.Services
 {
@@ -64,71 +59,85 @@ namespace Panaderia.Application.Services
 
         public async Task<bool> VentaRealizada(VentaDto dto)
         {
-            try {
-                var venta = new Venta
-                {
-                    Fecha = DateTime.Now,
-                    Total = 0,
-                    MetodoPago = (Panaderia.Domain.Entidades.Enums.MetodoDePago)(int)dto.MetodoPago,
-                    Observaciones = dto.Observaciones
-                };
-                await _context.Ventas.AddAsync(venta);
+            if (dto is null || dto.Detalles is not { Count: > 0 })
+                throw new ArgumentNullException(nameof(dto));
 
+            //Validar stock y cantidades antes de modificar cualquier estado
+            var productos = await _context.Productos
+                .Where(x => dto.Detalles.Select(d => d.ProductoID).Distinct().Contains(x.Id))
+                .ToDictionaryAsync(x => x.Id);
 
-                foreach (var detalle in dto.Detalles) {
-                    var p = await _context.Productos.FirstOrDefaultAsync(x => x.Id == detalle.ProductoID);
-                    if (p is null || p.StockActual < detalle.Cantidad) {
-                        return false;
-                    }
-                    p.StockActual -= detalle.Cantidad;
-                    var tipoVenta =(Panaderia.Domain.Entidades.Enums.TipoVenta)(int)detalle.TipoVenta;
+            foreach (var detalle in dto.Detalles) {
+                if (detalle.Cantidad is null or <= 0)
+                    return false;
 
-                    decimal? precioAplicado =
-                        tipoVenta == Panaderia.Domain.Entidades.Enums.TipoVenta.Unidad
-                            ? p.PrecioVentaUnidad ?? 0
-                            : p.PrecioVenta;
-
-                    //Para calcular las ganancias luego
-                    decimal costoAplicado = 
-                        tipoVenta == Panaderia.Domain.Entidades.Enums.TipoVenta.Unidad 
-                        ? p.PrecioCompraUnidad ?? 0 
-                        : p.PrecioCompra ?? 0;
-
-                    decimal? subtotal = precioAplicado * detalle.Cantidad;
-
-                    venta.Total += subtotal;
-
-
-                    venta.Detalles.Add(new DetalleVenta
-                    {
-                        ProductoId = p.Id,
-                        Cantidad = detalle.Cantidad,
-                        PrecioUnitario = precioAplicado ?? 0,
-                        Subtotal = subtotal ?? 0,
-                        CostoUnitario = costoAplicado,
-                        //Subtotal = p.PrecioVentaUnidad * detalle.Cantidad ?? 0
-
-                    });
-                    var tipoMovimiento = (Panaderia.Domain.Entidades.Enums.TipoMovimiento)(int)detalle.TipoMovimiento;
-
-                    await _context.MovimientosStock.AddAsync(
-                        new MovimientoStock
-                        {
-                            ProductoId = p.Id,
-                            Cantidad = detalle.Cantidad,
-                            Tipo = tipoMovimiento,
-                            Fecha = DateTime.UtcNow
-                        });
-                }
-                
-                await _context.SaveChangesAsync();
-
-                return true;
-
-            } catch (Exception ex) {
-                return false;
+                if (!productos.TryGetValue(detalle.ProductoID, out var producto) || producto.StockActual < detalle.Cantidad)
+                    return false;
             }
-            
+
+            var venta = new Venta
+            {
+                Fecha = DateTime.Now,
+                Total = 0,
+                MetodoPago = dto.MetodoPago,
+                Observaciones = dto.Observaciones
+            };
+            await _context.Ventas.AddAsync(venta);
+
+            var movimientos = new List<MovimientoStock>();
+
+            foreach (var detalle in dto.Detalles) {
+                var p = productos[detalle.ProductoID];
+
+                p.StockActual -= detalle.Cantidad;
+
+                var tipoVenta = detalle.TipoVenta;
+
+                decimal? precioAplicado =
+                    tipoVenta == TipoVenta.Unidad
+                        ? p.PrecioVentaUnidad ?? 0
+                        : p.PrecioVenta;
+
+                //Para calcular las ganancias luego
+                decimal costoAplicado =
+                    tipoVenta == TipoVenta.Unidad
+                    ? p.PrecioCompraUnidad ?? 0
+                    : p.PrecioCompra ?? 0;
+
+                decimal? subtotal = precioAplicado * detalle.Cantidad;
+
+                venta.Total += subtotal;
+
+                venta.Detalles.Add(new DetalleVenta
+                {
+                    ProductoId = p.Id,
+                    Cantidad = detalle.Cantidad,
+                    PrecioUnitario = precioAplicado ?? 0,
+                    Subtotal = subtotal ?? 0,
+                    CostoUnitario = costoAplicado
+                });
+
+                var movimiento = new MovimientoStock
+                {
+                    ProductoId = p.Id,
+                    Cantidad = detalle.Cantidad,
+                    Tipo = TipoMovimiento.Venta,
+                    Fecha = DateTime.UtcNow
+                };
+                movimientos.Add(movimiento);
+                await _context.MovimientosStock.AddAsync(movimiento);
+            }
+
+            await _context.SaveChangesAsync();
+
+            //Asociar la referencia de la venta a los movimientos generados
+            foreach (var movimiento in movimientos) {
+                movimiento.ReferenciaId = venta.Id;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         //Solamente mapeo para no repetir codigo con los metodos de Historial
@@ -139,7 +148,7 @@ namespace Panaderia.Application.Services
                 Id = v.Id,
                 Fecha = v.Fecha,
                 Total = v.Total,
-                MetodoPago = (Panaderia.Shared.Enums.MetodoDePago)(int)v.MetodoPago,
+                MetodoPago = v.MetodoPago,
 
                 Detalles = v.Detalles.Select(d => new DetalleVentaHistorialDto
                 {
@@ -152,8 +161,8 @@ namespace Panaderia.Application.Services
 
             }).ToList();
         }
-        //Filtrado de fehcas, lo mismo para no repetir 
-        private IQueryable<Venta> AplicarFiltroFechas(IQueryable<Venta> query,DateTime? desde,DateTime? hasta)
+        //Filtrado de fechas, lo mismo para no repetir
+        private IQueryable<Venta> AplicarFiltroFechas(IQueryable<Venta> query, DateTime? desde, DateTime? hasta)
         {
             if (desde.HasValue)
                 query = query.Where(x => x.Fecha >= desde.Value);

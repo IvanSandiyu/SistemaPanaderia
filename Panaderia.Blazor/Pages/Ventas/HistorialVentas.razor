@@ -377,7 +377,10 @@
     private void VerVenta(int id)
     {
         Item.Clear();
-        var v = ventas.FirstOrDefault(x => x.Id == id);
+        var v = ventas?.FirstOrDefault(x => x.Id == id);
+
+        if (v is null)
+            return;
 
         foreach (var item in v.Detalles) {
             Item.Add(new CarritoItemDto

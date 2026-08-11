@@ -8,7 +8,7 @@ namespace Panaderia.Shared.DTOs.Productos
 {
     public class ProductoMasVendidoDto
     {
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = string.Empty;
         public decimal? CantidadVendida { get; set; }
         public decimal? TotalFacturado { get; set; }
     }

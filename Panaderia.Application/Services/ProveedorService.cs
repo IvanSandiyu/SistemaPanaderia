@@ -83,7 +83,7 @@ namespace Panaderia.Application.Services
             return lista;
         }
 
-        public async Task<ProveedorDTO> ObtenerPorId(int id)
+        public async Task<ProveedorDTO?> ObtenerPorId(int id)
         {
             var p = await _context.Proveedores.FindAsync(id);
             if (p is null)

@@ -1,10 +1,10 @@
-﻿namespace Panaderia.Shared.Ventas
+﻿namespace Panaderia.Shared.DTOs.Ventas
 {
     public class DetalleVentaHistorialDto
     {
         public int ProductoId { get; set; }
 
-        public string Producto { get; set; }
+        public string Producto { get; set; } = string.Empty;
 
         public decimal? Cantidad { get; set; }
 

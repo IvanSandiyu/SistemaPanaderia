@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Panaderia.Application.Interfaces;
-using Panaderia.Domain.Entidades;
+﻿using Panaderia.Application.Interfaces;
 using Panaderia.Shared.DTOs.Ventas;
 
 namespace Panaderia.WebApi.Endpoints
@@ -23,37 +21,27 @@ namespace Panaderia.WebApi.Endpoints
             ventaGroup.MapGet("/ventas/{pag:int}", ListaVentas);
         }
 
-       
-        //Cambiar A results(bad request,ok,etc)
-        public async Task<IResult> GenerarVenta(VentaDto venta, IVentaService _service)
+        public async Task<IResult> GenerarVenta(VentaDto venta, IVentaService service)
         {
-            try {
-                if (venta is null)
-                    return Results.Problem();
+            if (venta is null)
+                return Results.BadRequest("La venta no puede ser nula.");
 
-                var response = await _service.VentaRealizada(venta);
-                return Results.Ok(response);
+            var response = await service.VentaRealizada(venta);
 
-            }catch(Exception ex) {
-                return Results.Problem(ex.Message);
-            }
-        }
-        
-        public async Task<IResult> HistorialVentas(DateTime? desde, DateTime? hasta, int? pagina,IVentaService _service)
-        {
-            try {
-                var listVentas = await _service.HistorialVentas(desde, hasta, pagina);
-                return Results.Ok(listVentas);
-            }
-            catch(Exception ex) { 
-                return Results.Problem(ex.Message);
-            }
-            
+            return response
+                ? Results.Ok(response)
+                : Results.BadRequest("No hay stock suficiente para realizar la venta.");
         }
 
-        private async Task<IResult> ListaVentas(int? pag,IVentaService _service)
+        public async Task<IResult> HistorialVentas(DateTime? desde, DateTime? hasta, int? pagina, IVentaService service)
         {
-            var ventas = await _service.ListaVentas(pag);
+            var listVentas = await service.HistorialVentas(desde, hasta, pagina);
+            return Results.Ok(listVentas);
+        }
+
+        private async Task<IResult> ListaVentas(int? pag, IVentaService service)
+        {
+            var ventas = await service.ListaVentas(pag);
 
             return Results.Ok(ventas);
         }
