@@ -1,5 +1,12 @@
 .sidebar-menu {
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-menu nav {
+    flex: 1;
 }
 
 .nav-link {

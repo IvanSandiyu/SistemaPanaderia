@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components
+@inject AuthService AuthService
+@inject NavigationManager Navigation
 
 <div class="sidebar-menu">
 
@@ -76,6 +78,17 @@
 
     </nav>
 
+    <button class="btn btn-outline-light w-100"
+            @onclick="CerrarSesion">
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        @if (!Contraido) {
+            <span class="ms-2">Cerrar sesión</span>
+        }
+
+    </button>
+
 </div>
 
 @code {
@@ -89,6 +102,12 @@
     private async Task Toggle()
     {
         await OnToggle.InvokeAsync();
+    }
+
+    private async Task CerrarSesion()
+    {
+        await AuthService.Logout();
+        Navigation.NavigateTo("/login");
     }
 
 }
