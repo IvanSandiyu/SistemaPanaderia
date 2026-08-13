@@ -80,7 +80,7 @@ El proyecto está construido utilizando:
 
 ## Próximas funcionalidades:
 - Autenticación JWT
-- Login de usuarios
+- Login ✅
 - Gestión de proveedores ✅
 - Reportes avanzados
 - Exportación a PDF/Excel ✅
